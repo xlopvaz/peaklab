@@ -13,7 +13,7 @@ const store = {
 };
 
 /* ---------- Idioma ---------- */
-let LANG = store.get("lang", "") || ((navigator.language || "es").toLowerCase().startsWith("es") || (navigator.language || "").toLowerCase().startsWith("gl") ? "es" : "en");
+let LANG = store.get("lang", "") || "en"; // inglés por defecto
 const L = (es, en) => (LANG === "en" ? en : es);
 const DEC = () => (LANG === "en" ? "." : ",");
 
@@ -113,15 +113,15 @@ const EN = {
   "ms.r1": "≈ 0.7 Da FWHM · quadrupole / QqQ", "ms.r2": "R = 20,000 · Q-TOF", "ms.r3": "R = 70,000 · Orbitrap",
   "ms.r4": "R = 240,000 · high-resolution Orbitrap", "ms.r5": "R = 1,000,000 · FT-ICR", "ms.meas": "Measured m/z",
   "dr.h1": "Draw molecules",
-  "dr.intro": "Draw with the tools on the left (bonds, atoms, rings, charges) or load a structure from PubChem. Formula and mass update as you draw.",
-  "dr.search": "Search PubChem", "dr.searchHint": "English name, CAS number or SMILES", "dr.load": "Load",
+  "dr.intro": "Draw with the tools on the left (bonds, atoms, rings, charges) or type a name to get the structure. Formula, mass and name update as you draw.",
+  "dr.search": "Name → structure", "dr.searchHint": "English name, CAS number or SMILES (PubChem)", "dr.load": "Load",
   "dr.loading": "Loading the editor…", "dr.struct": "Structure", "dr.toMass": "See adducts and spectrum →",
   "dr.copySmi": "Copy SMILES", "dr.png": "Download image (PNG)", "dr.clear": "Clear all",
   "dr.tip": "Tip: with the bond tool, click on the canvas to start and again on an atom to extend the chain. Use the “C” tool to change an atom's element.",
   "bg.h1": "Background ions and contaminants",
   "bg.intro": "Type the m/z of a suspicious peak. Masses are computed from each ion's formula, so you can search at high-resolution or nominal precision.",
   "bg.q": "m/z or text", "bg.ph": "445.12, phthalate, siloxane…", "bg.tol": "Tolerance", "bg.nominal": "0.5 Da (nominal)", "bg.tech": "Technique", "bg.all": "All",
-  "foot.1": "PeakLab computes everything in your browser; nothing is stored or sent outside your computer (except the PubChem searches you run). Results are a guide: always check the criteria of the guideline that applies to your method.",
+  "foot.1": "PeakLab computes everything in your browser; nothing is stored or sent outside your computer, except the structures you draw or search, which are looked up in PubChem to get their name. Results are a guide: always check the criteria of the guideline that applies to your method.",
   "foot.2": "Made by Xoel López Vázquez", "foot.3": "source on GitHub", "foot.4": "Molecule editor: <a href=\"https://partridgejiang.github.io/Kekule.js/\">Kekule.js</a> (MIT)",
 };
 
@@ -957,7 +957,10 @@ function readStructure(force) {
   } else store.set("molfile", "");
   DRAW.formula = counts ? hill(counts) : null;
   DRAW.charge = charge;
+  DRAW.name = { state: smi ? "wait" : "none" };
   renderDrawPanel(err);
+  clearTimeout(DRAW.nameTimer);
+  if (smi) DRAW.nameTimer = setTimeout(() => identify(smi), 900);
 }
 
 function renderDrawPanel(err) {
@@ -966,6 +969,7 @@ function renderDrawPanel(err) {
   ["drToMass", "drCopySmi", "drPng"].forEach((id) => { $(id).disabled = !has; });
   if (DRAW.state !== "ready") { out.innerHTML = ""; return; }
   if (!has) {
+    $("drName").innerHTML = "";
     out.innerHTML = `<div class="stat"><div class="k">${L("Fórmula", "Formula")}</div><div class="v">${err ? esc(err) : L("Dibuja una molécula", "Draw a molecule")}</div></div>`;
     return;
   }
@@ -976,6 +980,51 @@ function renderDrawPanel(err) {
     <div class="stat"><div class="k">${L("Masa monoisotópica", "Monoisotopic mass")}</div><div class="v">${fmtMz(monoMass(c), 5)}</div></div>
     <div class="stat"><div class="k">${L("Masa molar media", "Average molar mass")}</div><div class="v">${fmtMz(avgMass(c), 3)} g/mol</div></div>
     <div class="stat"><div class="k">SMILES</div><div class="v smi">${esc(DRAW.smi)}</div></div>`;
+  renderName();
+}
+
+/* ---------- Estructura → nombre (PubChem) ---------- */
+const PUG = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/";
+async function identify(smi) {
+  try {
+    const r = await fetch(PUG + "smiles/property/Title,IUPACName/JSON", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: "smiles=" + encodeURIComponent(smi) });
+    if (smi !== DRAW.smi) return;
+    if (!r.ok) throw new Error("http");
+    const j = await r.json();
+    const p = j && j.PropertyTable && j.PropertyTable.Properties && j.PropertyTable.Properties[0];
+    if (!p || !p.CID) { DRAW.name = { state: "notfound" }; renderName(); return; }
+    DRAW.name = { state: "ok", cid: p.CID, title: p.Title || "", iupac: p.IUPACName || "", cas: "" };
+    renderName();
+    try {
+      const r2 = await fetch(PUG + "cid/" + p.CID + "/synonyms/JSON");
+      if (r2.ok && smi === DRAW.smi) {
+        const j2 = await r2.json();
+        const syn = (j2.InformationList && j2.InformationList.Information[0].Synonym) || [];
+        const cas = syn.find((x) => /^\d{2,7}-\d{2}-\d$/.test(x));
+        if (cas) { DRAW.name.cas = cas; renderName(); }
+      }
+    } catch (e) { /* sin CAS */ }
+  } catch (e) {
+    if (smi !== DRAW.smi) return;
+    DRAW.name = { state: "error" }; renderName();
+  }
+}
+
+function renderName() {
+  const el = $("drName");
+  const n = DRAW.name || { state: "none" };
+  if (!DRAW.formula || n.state === "none") { el.innerHTML = ""; return; }
+  let v;
+  if (n.state === "wait") v = `<div class="v small-v">${L("Buscando en PubChem…", "Looking up PubChem…")}</div>`;
+  else if (n.state === "notfound") v = `<div class="v small-v">${L("No está en PubChem (puede ser una molécula nueva o el dibujo estar incompleto).", "Not in PubChem (it may be a new compound or the drawing may be incomplete).")}</div>`;
+  else if (n.state === "error") v = `<div class="v small-v">${L("No se ha podido consultar PubChem.", "Could not reach PubChem.")}</div>`;
+  else {
+    const same = n.title && n.iupac && n.title.toLowerCase() === n.iupac.toLowerCase();
+    v = `<div class="v name-v">${esc(n.title || n.iupac)}</div>` +
+      (n.iupac && !same ? `<div class="s name-s">IUPAC: ${esc(n.iupac)}</div>` : "") +
+      `<div class="s">${n.cas ? "CAS " + esc(n.cas) + " · " : ""}<a href="https://pubchem.ncbi.nlm.nih.gov/compound/${n.cid}" target="_blank" rel="noopener">PubChem CID ${n.cid}</a></div>`;
+  }
+  el.innerHTML = `<div class="stat"><div class="k">${L("Nombre", "Name")}</div>${v}</div>`;
 }
 
 function pcMsg(t, isErr) { const el = $("pcMsg"); el.textContent = t; el.classList.toggle("err", !!isErr); }

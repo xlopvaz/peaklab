@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -274,12 +274,12 @@
 <section id="dibujar" class="view" hidden>
   <div class="view-head">
     <h1 data-i18n="dr.h1">Dibujar moléculas</h1>
-    <p data-i18n="dr.intro">Dibuja con las herramientas de la izquierda (enlaces, átomos, anillos, cargas) o carga una estructura desde PubChem. La fórmula y la masa se calculan mientras dibujas.</p>
+    <p data-i18n="dr.intro">Dibuja con las herramientas de la izquierda (enlaces, átomos, anillos, cargas) o escribe un nombre para obtener la estructura. La fórmula, la masa y el nombre se actualizan mientras dibujas.</p>
   </div>
 
   <div class="card">
     <form id="pcForm" class="field-row wrap pc-row">
-      <label class="field grow"><span><span data-i18n="dr.search">Buscar en PubChem</span> <span class="hint" data-i18n="dr.searchHint">nombre en inglés, nº CAS o SMILES</span></span>
+      <label class="field grow"><span><span data-i18n="dr.search">Nombre → estructura</span> <span class="hint" data-i18n="dr.searchHint">nombre en inglés, nº CAS o SMILES (PubChem)</span></span>
         <input id="pcQuery" type="text" spellcheck="false" autocomplete="off" placeholder="carbamazepine, 298-46-4, CN1C=NC2=C1C(=O)N(C(=O)N2C)C">
       </label>
       <button type="submit" class="btn" id="pcBtn" data-i18n="dr.load">Cargar</button>
@@ -293,6 +293,7 @@
     </div>
     <div class="card draw-side">
       <h2 class="card-title" data-i18n="dr.struct">Estructura</h2>
+      <div id="drName" class="stats single name-box"></div>
       <div id="drOut" class="stats single"></div>
       <div class="btn-col">
         <button type="button" class="btn" id="drToMass" data-i18n="dr.toMass">Ver aductos y espectro →</button>
@@ -342,7 +343,7 @@
 </main>
 
 <footer class="foot">
-  <p data-i18n="foot.1">PeakLab calcula todo en tu navegador; no se guarda ni se envía nada fuera de tu ordenador (salvo las búsquedas en PubChem que tú lances). Los valores son de apoyo: comprueba siempre los criterios de la guía que aplique a tu método.</p>
+  <p data-i18n="foot.1">PeakLab calcula todo en tu navegador; no se guarda ni se envía nada fuera de tu ordenador salvo las estructuras que dibujas o buscas, que se consultan en PubChem para obtener su nombre. Los valores son de apoyo: comprueba siempre los criterios de la guía que aplique a tu método.</p>
   <p><span data-i18n="foot.2">Hecho por Xoel López Vázquez</span> · <a href="https://github.com/xlopvaz/peaklab" data-i18n="foot.3">código en GitHub</a> · <span data-i18n="foot.4">Editor de moléculas: <a href="https://partridgejiang.github.io/Kekule.js/">Kekule.js</a> (MIT)</span></p>
 </footer>
 

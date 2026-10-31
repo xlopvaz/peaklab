@@ -371,3 +371,9 @@ table.data tr.hit td { background: var(--accent-soft); }
 .stat .v.smi { font-size: 13px; line-height: 1.4; word-break: break-all; }
 #composer.K-Chem-Composer { width: 100% !important; height: 540px !important; }
 @media (max-width: 900px) { #composer.K-Chem-Composer { height: 460px !important; } }
+.name-box:empty { display: none; }
+.name-box { margin-bottom: 10px; }
+.stat .v.name-v { font-family: var(--sans); font-size: 18px; font-weight: 600; }
+.stat .v.small-v { font-family: var(--sans); font-size: 14px; font-weight: 400; color: var(--ink-2); }
+.stat .s.name-s { font-family: var(--sans); margin-top: 2px; overflow-wrap: anywhere; }
+.stat a { color: var(--accent); }
