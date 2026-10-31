@@ -22,6 +22,7 @@
     <a href="#calibrado" data-tab="calibrado" data-i18n="nav.cal">Calibrado</a>
     <a href="#masas" data-tab="masas" data-i18n="nav.mass">Masas</a>
     <a href="#dibujar" data-tab="dibujar" data-i18n="nav.draw">Dibujar</a>
+    <a href="#cromatografia" data-tab="cromatografia" data-i18n="nav.chrom">Cromatografía</a>
     <a href="#fondo" data-tab="fondo" data-i18n="nav.bg">Iones de fondo</a>
   </nav>
   <div class="top-actions">
@@ -61,6 +62,11 @@
       <h2 data-i18n="home.c3t">Dibujar moléculas</h2>
       <p data-i18n="home.c3p">Editor de estructuras al estilo ChemDraw. Dibuja o busca en PubChem por nombre, CAS o SMILES, y pasa la fórmula a la calculadora de masas con un clic.</p>
     </a>
+    <a class="card tool-card" href="#cromatografia">
+      <span class="tool-ico">⩘</span>
+      <h2 data-i18n="home.c5t">Simulador de cromatogramas</h2>
+      <p data-i18n="home.c5p">HPLC y GC: mueve el gradiente, la rampa de temperatura o la columna y mira cómo cambian los tiempos de retención, la resolución y la presión.</p>
+    </a>
     <a class="card tool-card" href="#fondo">
       <span class="tool-ico">?</span>
       <h2 data-i18n="home.c4t">Iones de fondo</h2>
@@ -72,7 +78,6 @@
     <h3 data-i18n="home.soon">Próximamente</h3>
     <ul data-i18n="home.soonList">
       <li><b>Traductor de métodos</b> HPLC → UHPLC y calculadora de flujos de GC</li>
-      <li><b>Simulador de cromatogramas</b>: gradientes, rampas y resolución</li>
       <li><b>¿GC o LC?</b> a partir de la estructura dibujada</li>
       <li><b>Métricas verdes</b>: AGREEprep y BAGI</li>
     </ul>
@@ -306,6 +311,138 @@
   </div>
 </section>
 
+<!-- ===================== CROMATOGRAFÍA ===================== -->
+<section id="cromatografia" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="ch.h1">Simulador de cromatogramas</h1>
+    <p data-i18n="ch.intro">Cambia la columna, el gradiente o la rampa de temperatura y mira cómo se mueven los picos, cuánto se separan y qué presión tendrías. Es un modelo físico simplificado: sirve para entender y para orientar un método, no para sustituir los ensayos.</p>
+  </div>
+
+  <div class="seg big" id="chMode">
+    <button type="button" data-m="lc" class="on">HPLC</button>
+    <button type="button" data-m="gc">GC</button>
+  </div>
+
+  <!-- ---------- HPLC ---------- -->
+  <div id="lcPane">
+    <div class="grid-2">
+      <div class="card">
+        <h2 class="card-title" data-i18n="ch.column">Columna</h2>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.len">Longitud (mm)</span>
+            <select id="lcL"><option>50</option><option>100</option><option selected>150</option><option>250</option></select></label>
+          <label class="field grow"><span data-i18n="ch.id">Diámetro interno (mm)</span>
+            <select id="lcID"><option>2.1</option><option>3.0</option><option selected>4.6</option></select></label>
+          <label class="field grow"><span data-i18n="ch.dp">Partícula (µm)</span>
+            <select id="lcDp"><option>1.7</option><option>2.7</option><option>3.5</option><option selected>5</option></select></label>
+        </div>
+        <h2 class="card-title" data-i18n="ch.mp">Fase móvil y gradiente</h2>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.org">Disolvente B</span>
+            <select id="lcOrg"><option value="acn" data-i18n="ch.acn">Acetonitrilo</option><option value="meoh" data-i18n="ch.meoh">Metanol</option></select></label>
+          <label class="field grow"><span data-i18n="ch.flow">Flujo (mL/min)</span>
+            <input id="lcF" type="text" inputmode="decimal" value="1"></label>
+          <label class="field grow"><span data-i18n="ch.dwell">Volumen de retardo (mL)</span>
+            <input id="lcVd" type="text" inputmode="decimal" value="1"></label>
+        </div>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.b0">% B inicial</span>
+            <input id="lcB0" type="range" min="0" max="100" value="10"><output id="lcB0o"></output></label>
+          <label class="field grow"><span data-i18n="ch.b1">% B final</span>
+            <input id="lcB1" type="range" min="0" max="100" value="95"><output id="lcB1o"></output></label>
+        </div>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.hold0">Isocrático inicial (min)</span>
+            <input id="lcH0" type="text" inputmode="decimal" value="1"></label>
+          <label class="field grow"><span data-i18n="ch.tg">Tiempo de gradiente (min)</span>
+            <input id="lcTG" type="range" min="1" max="60" value="15"><output id="lcTGo"></output></label>
+          <label class="field grow"><span data-i18n="ch.hold1">Lavado final (min)</span>
+            <input id="lcH1" type="text" inputmode="decimal" value="3"></label>
+        </div>
+        <p class="hint small" data-i18n="ch.isoHint">Para un método isocrático, pon el mismo % B inicial y final.</p>
+      </div>
+      <div class="card">
+        <h2 class="card-title" data-i18n="ch.cmp">Compuestos</h2>
+        <label class="field"><span data-i18n="ch.preset">Mezcla de ejemplo</span>
+          <select id="lcPreset">
+            <option value="pharma" data-i18n="ch.pPharma">Fármacos y contaminantes emergentes</option>
+            <option value="parabens" data-i18n="ch.pParabens">Parabenos</option>
+          </select></label>
+        <label class="field"><span><span data-i18n="ch.lcList">Lista</span> <span class="hint" data-i18n="ch.lcListHint">nombre ; log P ; masa molar</span></span>
+          <textarea id="lcCmp" rows="10" spellcheck="false"></textarea></label>
+        <p class="hint small" data-i18n="ch.lcModel">Retención en fase reversa (C18) estimada con el modelo de fuerza disolvente lineal: log k = log k<sub>w</sub> − S·φ, con log k<sub>w</sub> y S aproximados a partir del log P y la masa molar. No tiene en cuenta el pH ni la ionización.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- GC ---------- -->
+  <div id="gcPane" hidden>
+    <div class="grid-2">
+      <div class="card">
+        <h2 class="card-title" data-i18n="ch.column">Columna</h2>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.lenm">Longitud (m)</span>
+            <select id="gcL"><option>15</option><option selected>30</option><option>60</option></select></label>
+          <label class="field grow"><span data-i18n="ch.id">Diámetro interno (mm)</span>
+            <select id="gcID"><option>0.18</option><option selected>0.25</option><option>0.32</option><option>0.53</option></select></label>
+          <label class="field grow"><span data-i18n="ch.df">Espesor de fase (µm)</span>
+            <select id="gcDf"><option>0.1</option><option selected>0.25</option><option>0.5</option><option>1.0</option></select></label>
+        </div>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.gas">Gas portador</span>
+            <select id="gcGas"><option value="he" data-i18n="ch.he">Helio</option><option value="h2" data-i18n="ch.h2">Hidrógeno</option><option value="n2" data-i18n="ch.n2">Nitrógeno</option></select></label>
+          <label class="field grow"><span data-i18n="ch.flow">Flujo (mL/min)</span>
+            <input id="gcF" type="text" inputmode="decimal" value="1"></label>
+        </div>
+        <h2 class="card-title" data-i18n="ch.oven">Programa del horno</h2>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.T0">T inicial (°C)</span>
+            <input id="gcT0" type="text" inputmode="decimal" value="50"></label>
+          <label class="field grow"><span data-i18n="ch.h0">Mantener (min)</span>
+            <input id="gcH0" type="text" inputmode="decimal" value="1"></label>
+        </div>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.rate">Rampa (°C/min)</span>
+            <input id="gcR" type="range" min="1" max="40" value="10"><output id="gcRo"></output></label>
+          <label class="field grow"><span data-i18n="ch.T1">T final (°C)</span>
+            <input id="gcT1" type="text" inputmode="decimal" value="300"></label>
+          <label class="field grow"><span data-i18n="ch.h1">Mantener (min)</span>
+            <input id="gcH1" type="text" inputmode="decimal" value="5"></label>
+        </div>
+      </div>
+      <div class="card">
+        <h2 class="card-title" data-i18n="ch.cmp">Compuestos</h2>
+        <label class="field"><span data-i18n="ch.preset">Mezcla de ejemplo</span>
+          <select id="gcPreset">
+            <option value="pah" data-i18n="ch.pPah">16 PAH de la EPA</option>
+            <option value="phth" data-i18n="ch.pPhth">Ftalatos</option>
+            <option value="alk" data-i18n="ch.pAlk">n-Alcanos C8–C30</option>
+          </select></label>
+        <label class="field"><span><span data-i18n="ch.lcList">Lista</span> <span class="hint" data-i18n="ch.gcListHint">nombre ; índice de retención (columna tipo 5 % fenilo)</span></span>
+          <textarea id="gcCmp" rows="10" spellcheck="false"></textarea></label>
+        <p class="hint small" data-i18n="ch.gcModel">La retención se calcula a partir del índice de retención de Kovats: cada compuesto se trata como un n-alcano equivalente y su k cambia con la temperatura según la ecuación de van ’t Hoff. Los índices de los ejemplos son aproximados.</p>
+      </div>
+    </div>
+  </div>
+
+  <figure class="card chart-card chrom-card">
+    <figcaption><span data-i18n="ch.chrom">Cromatograma simulado</span> <span id="chHover" class="hint"></span></figcaption>
+    <div id="chChart" class="chart chrom"></div>
+  </figure>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2 class="card-title" data-i18n="ch.sum">Resumen</h2>
+      <div id="chStats" class="stats"></div>
+      <div id="chNotes" class="notes"></div>
+    </div>
+    <div class="card">
+      <h2 class="card-title" data-i18n="ch.peaks">Picos</h2>
+      <div class="table-wrap"><table id="chTable" class="data compact"></table></div>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== FONDO ===================== -->
 <section id="fondo" class="view" hidden>
   <div class="view-head">
@@ -348,5 +485,6 @@
 </footer>
 
 <script src="script.js"></script>
+<script src="chroma.js"></script>
 </body>
 </html>

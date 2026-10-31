@@ -330,7 +330,7 @@ table.data tr.hit td { background: var(--accent-soft); }
 .lead { font-size: 17px; color: var(--ink-2); max-width: 680px; margin: 0; }
 
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
-.cards.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cards.four { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
 .tool-card { text-decoration: none; color: var(--ink); transition: border-color .15s, transform .15s; display: block; }
 .tool-card:hover { border-color: var(--accent); transform: translateY(-2px); }
 .tool-card h2 { font-size: 18px; margin: 14px 0 8px; }
@@ -346,9 +346,7 @@ table.data tr.hit td { background: var(--accent-soft); }
 .foot p { margin: 0 0 6px; }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1100px) {
-  .cards.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
+
 @media (max-width: 900px) {
   .grid-3, .cards, .cards.four { grid-template-columns: 1fr; }
   .draw-layout { grid-template-columns: 1fr; }
@@ -377,3 +375,26 @@ table.data tr.hit td { background: var(--accent-soft); }
 .stat .v.small-v { font-family: var(--sans); font-size: 14px; font-weight: 400; color: var(--ink-2); }
 .stat .s.name-s { font-family: var(--sans); margin-top: 2px; overflow-wrap: anywhere; }
 .stat a { color: var(--accent); }
+
+/* ---------- Chromatography ---------- */
+.seg.big { margin: 0 0 16px; }
+.seg.big button { font: 600 14px var(--sans); padding: 7px 22px; border-radius: 9px; }
+.field output { font: 500 13px var(--mono); color: var(--ink); }
+input[type="range"] { padding: 0; border: 0; accent-color: var(--accent); background: transparent; height: 26px; }
+input[type="range"]:focus { outline: none; }
+.chrom-card { margin-bottom: 16px; }
+.chart.chrom { min-height: 0; }
+.chart .trace { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; }
+.chart .progline { fill: none; stroke: var(--fit); stroke-width: 1.4; stroke-dasharray: 5 4; opacity: .8; }
+.chart .tick.prog, .chart .lab.prog { fill: var(--fit); }
+.chart .pklab { fill: var(--accent); font: 600 12px var(--mono); }
+.chart .pklab.bad { fill: var(--bad); }
+.rs-bad { color: var(--bad); font-weight: 600; }
+@media (max-width: 1100px) {
+  .tabs { overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+}
+@media (max-width: 760px) {
+  .tabs { justify-content: flex-start; }
+  .tabs a { flex: 0 0 auto; padding: 6px 10px; }
+}
