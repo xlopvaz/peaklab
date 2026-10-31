@@ -1,22 +1,22 @@
 # PeakLab
 
-Herramientas de química analítica para GC-MS y LC-MS que funcionan en el navegador, sin servidor y sin enviar datos. En español e inglés.
+Analytical chemistry tools for GC-MS and LC-MS that run entirely in the browser: no server, no data sent anywhere. Available in English and Spanish.
 
-**Web:** https://xlopvaz.github.io/peaklab/
+**Website:** https://xlopvaz.github.io/peaklab/
 
-## Qué incluye
+## Features
 
-- **Calibrado y validación:** recta con o sin ponderación (1/x, 1/x²), R², IC de pendiente y ordenada, LOD/LOQ, residuales, concentración de muestras con preconcentración y su IC al 95 %, efecto matriz, recuperación y relación de iones (SANTE/11312/2021).
-- **Masas y espectros:** masa monoisotópica y media, DBE, aductos de ESI(+), ESI(−) y EI, error en ppm y espectro isotópico simulado a la resolución del equipo (cuadrupolo, Q-TOF, Orbitrap, FT-ICR), con estructura fina.
-- **Dibujar moléculas:** editor estilo ChemDraw ([Kekule.js](https://partridgejiang.github.io/Kekule.js/), MIT) con búsqueda en PubChem por nombre, CAS o SMILES; la fórmula pasa directamente a la calculadora de masas.
-- **Simulador de cromatogramas:** HPLC (gradiente con modelo de fuerza disolvente lineal, van Deemter, presión) y GC (programa de temperatura a partir de índices de retención, Golay, presión de cabeza), con resolución del par crítico y consejos.
-- **Iones de fondo:** buscador por m/z de contaminantes habituales (ftalatos, siloxanos, sangrado de columna, PEG, aditivos de plásticos, PFTBA…).
+- **Calibration and validation:** weighted or unweighted regression (1/x, 1/x²), R², confidence intervals for slope and intercept, LOD/LOQ, residual plot, sample concentrations with preconcentration factor and 95 % CI, matrix effect, recovery and ion ratio check (SANTE/11312/2021).
+- **Masses and spectra:** monoisotopic and average mass, double bond equivalents, ESI(+), ESI(−) and EI adducts, ppm error, and isotope spectra simulated at the instrument's resolution (quadrupole, Q-TOF, Orbitrap, FT-ICR), including fine structure.
+- **Molecule drawing:** ChemDraw-style editor ([Kekule.js](https://partridgejiang.github.io/Kekule.js/), MIT) with PubChem lookup in both directions: name, CAS or SMILES to structure, and drawn structure to name. The formula goes straight to the mass calculator.
+- **Chromatogram simulator:** HPLC (gradient elution with the linear solvent strength model, van Deemter efficiency, column pressure) and GC (temperature programs from retention indices, Golay efficiency, head pressure), with critical-pair resolution and method tips.
+- **Background ions:** m/z search for common contaminants (phthalates, siloxanes, column bleed, PEG, plastic additives, PFTBA…).
 
-## Estructura
+## Files
 
-- `index.html`: estructura de la página
-- `style.css`: estilos (tema claro y oscuro)
-- `script.js`: calibrado, masas, editor e iones de fondo
-- `chroma.js`: simulador de cromatogramas
+- `index.html`: page structure
+- `style.css`: styles (light and dark theme)
+- `script.js`: calibration, masses, molecule editor and background ions
+- `chroma.js`: chromatogram simulator
 
-Hecho por Xoel López Vázquez.
+Made by Xoel López Vázquez.
