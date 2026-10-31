@@ -24,6 +24,7 @@
     <a href="#dibujar" data-tab="dibujar" data-i18n="nav.draw">Dibujar</a>
     <a href="#cromatografia" data-tab="cromatografia" data-i18n="nav.chrom">Cromatografía</a>
     <a href="#metodos" data-tab="metodos" data-i18n="nav.methods">Métodos</a>
+    <a href="#verde" data-tab="verde" data-i18n="nav.green">Métricas verdes</a>
     <a href="#fondo" data-tab="fondo" data-i18n="nav.bg">Iones de fondo</a>
   </nav>
   <div class="top-actions">
@@ -73,6 +74,16 @@
       <h2 data-i18n="home.c6t">Transferencia de métodos</h2>
       <p data-i18n="home.c6p">Pasa un método de HPLC a UHPLC (o a cualquier otra columna) con el gradiente, el flujo y el volumen de inyección escalados, y calcula flujos y presiones de GC.</p>
     </a>
+    <a class="card tool-card" href="#dibujar">
+      <span class="tool-ico">GC/LC</span>
+      <h2 data-i18n="home.c8t">¿GC o LC?</h2>
+      <p data-i18n="home.c8p">Dibuja una molécula y te recomienda GC o LC, con qué columna, detector o modo de ionización, y si necesita derivatización.</p>
+    </a>
+    <a class="card tool-card" href="#verde">
+      <span class="tool-ico">0.62</span>
+      <h2 data-i18n="home.c7t">Métricas verdes</h2>
+      <p data-i18n="home.c7p">Puntúa la preparación de muestra con AGREEprep y la practicidad del método con BAGI, y descarga los pictogramas para tu memoria.</p>
+    </a>
     <a class="card tool-card" href="#fondo">
       <span class="tool-ico">?</span>
       <h2 data-i18n="home.c4t">Iones de fondo</h2>
@@ -80,13 +91,6 @@
     </a>
   </div>
 
-  <div class="soon">
-    <h3 data-i18n="home.soon">Próximamente</h3>
-    <ul data-i18n="home.soonList">
-      <li><b>¿GC o LC?</b> a partir de la estructura dibujada</li>
-      <li><b>Métricas verdes</b>: AGREEprep y BAGI</li>
-    </ul>
-  </div>
 </section>
 
 <!-- ===================== CALIBRADO ===================== -->
@@ -313,6 +317,10 @@
       </div>
       <p class="hint small" data-i18n="dr.tip">Truco: con la herramienta de enlace, haz clic en el lienzo para empezar y otra vez sobre un átomo para alargar la cadena. Con la herramienta «C» cambias el elemento de un átomo.</p>
     </div>
+  </div>
+  <div class="card adv-card" id="advisor">
+    <h2 class="card-title" data-i18n="adv.h">¿GC o LC?</h2>
+    <div id="advBody"></div>
   </div>
 </section>
 
@@ -559,6 +567,47 @@
   </div>
 </section>
 
+<!-- ===================== MÉTRICAS VERDES ===================== -->
+<section id="verde" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="gr.h1">Métricas verdes: AGREEprep y BAGI</h1>
+    <p data-i18n="gr.intro">AGREEprep puntúa lo verde que es la preparación de muestra (de 0 a 1). BAGI puntúa lo práctico que es el método completo (de 25 a 100). Rellena los criterios y los pictogramas se actualizan al momento.</p>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <label class="field"><span data-i18n="gr.name">Nombre del método (aparece en los pictogramas descargados)</span><input id="grName" type="text" autocomplete="off"></label>
+    <p class="hint small" style="margin:0 0 6px" data-i18n="gr.examples">Ejemplos</p>
+    <div class="chips" id="grPresets"></div>
+  </div>
+
+  <div class="green-grid">
+    <div class="card">
+      <h2 class="card-title">AGREEprep</h2>
+      <div id="agpForm" class="crit-list"></div>
+      <button type="button" class="btn ghost small-btn" id="agpReset" data-i18n="gr.resetW">Restablecer pesos</button>
+    </div>
+    <div class="card pict-card">
+      <div id="agpPict" class="pict"></div>
+      <div id="agpSum" class="pict-sum"></div>
+      <div class="btn-row"><button type="button" class="btn ghost" id="agpPng" data-i18n="gr.png">Descargar PNG</button><button type="button" class="btn ghost" id="agpSvg">SVG</button></div>
+      <p class="hint small" data-i18n="gr.agpRef">Wojnowski et al., TrAC 149 (2022) 116553. Media ponderada de los 10 criterios; los pesos por defecto son los del artículo.</p>
+    </div>
+  </div>
+
+  <div class="green-grid">
+    <div class="card">
+      <h2 class="card-title">BAGI</h2>
+      <div id="bagiForm" class="crit-list"></div>
+    </div>
+    <div class="card pict-card">
+      <div id="bagiPict" class="pict"></div>
+      <div id="bagiSum" class="pict-sum"></div>
+      <div class="btn-row"><button type="button" class="btn ghost" id="bagiPng" data-i18n="gr.png">Descargar PNG</button><button type="button" class="btn ghost" id="bagiSvg">SVG</button></div>
+      <p class="hint small" data-i18n="gr.bagiRef">Manousi et al., Green Chem. 25 (2023) 7598. Suma de los 10 atributos (25–100); a partir de 60 el método se considera práctico.</p>
+    </div>
+  </div>
+  <p class="hint small" data-i18n="gr.note">Los pictogramas los dibuja PeakLab con los criterios publicados; su forma no es idéntica a la del software oficial de los autores. Si los usas en una publicación, cita los artículos originales.</p>
+</section>
+
 <!-- ===================== FONDO ===================== -->
 <section id="fondo" class="view" hidden>
   <div class="view-head">
@@ -603,5 +652,7 @@
 <script src="script.js"></script>
 <script src="chroma.js"></script>
 <script src="transfer.js"></script>
+<script src="advisor.js"></script>
+<script src="green.js"></script>
 </body>
 </html>
