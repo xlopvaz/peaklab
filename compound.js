@@ -220,7 +220,10 @@ function renderCompound() {
   if (D.dtxsid) links.push(`<a href="https://comptox.epa.gov/dashboard/chemical/details/${D.dtxsid}" target="_blank" rel="noopener">EPA CompTox</a>`);
 
   // ---- Identidad
-  let h = `<div class="card cp-head">
+  let h = `<div class="card cp-head"><div class="cp-head-grid">
+    <figure class="cp-struct"><div id="cpStruct" class="cp-struct-img" role="img" aria-label="${esc(L("Estructura de ", "Structure of ") + title)}"></div>
+      <figcaption><button type="button" class="link-btn" id="cpSvg">${L("Descargar SVG", "Download SVG")}</button></figcaption></figure>
+    <div class="cp-head-info">
     <div class="cp-title"><h2>${esc(title)}</h2><div class="cp-links">${links.join(" · ")}</div></div>
     ${p.IUPACName && p.IUPACName.toLowerCase() !== title.toLowerCase() ? `<p class="muted small cp-iupac">IUPAC: ${esc(p.IUPACName)}</p>` : ""}
     <div class="stats cp-id">
@@ -237,7 +240,7 @@ function renderCompound() {
       <button type="button" class="btn ghost" id="cpToMass"${M ? "" : " disabled"}>${L("Aductos y espectro →", "Adducts and spectrum →")}</button>
       <button type="button" class="btn ghost" id="cpToDeriv"${M ? "" : " disabled"}>${L("Derivatizar →", "Derivatize →")}</button>
     </div>
-  </div>`;
+  </div></div></div>`;
 
   // ---- Propiedades experimentales
   const xp = expLogP(e);
@@ -331,6 +334,37 @@ function renderCompound() {
   });
   if (CP.adv) advRenderInto($("cpAdv"), CP.adv, () => title);
   renderLogd();
+  cpStructure();
+}
+
+// Estructura 2D: OpenChemLib (vectorial, sin red); si falla, la imagen de PubChem
+async function cpStructure() {
+  const D = CP.data, box = $("cpStruct");
+  if (!D || !box) return;
+  const fallback = () => {
+    box.innerHTML = `<img src="https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${D.cid}/PNG?image_size=400x300" alt="">`;
+    $("cpSvg").hidden = true;
+  };
+  if (!D.props.smiles) { fallback(); return; }
+  try {
+    if (!CP.svg || CP.svgCid !== D.cid) {
+      const OCL = await loadOCL();
+      const mol = OCL.Molecule.fromSmiles(D.props.smiles);
+      mol.inventCoordinates();
+      let svg = mol.toSVG(400, 300, "cpmol" + D.cid, { suppressChiralText: true, autoCrop: true, autoCropMargin: 14, strokeWidth: 1.4 });
+      CP.svg = svg; CP.svgCid = D.cid;
+    }
+    if (CP.data !== D || !$("cpStruct")) return;
+    // quitar el tamaño fijo para que escale con su contenedor
+    $("cpStruct").innerHTML = CP.svg.replace(/\swidth="[^"]*"/, "").replace(/\sheight="[^"]*"/, "");
+    $("cpSvg").hidden = false;
+    $("cpSvg").onclick = () => {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([CP.svg], { type: "image/svg+xml" }));
+      a.download = (D.props.Title || "CID" + D.cid).replace(/[^\w\-]+/g, "_") + ".svg";
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+  } catch (e) { fallback(); }
 }
 
 function renderLogd() {
