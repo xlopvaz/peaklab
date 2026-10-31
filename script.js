@@ -92,7 +92,7 @@ const EN = {
   "home.c4t": "Background ions",
   "home.c4p": "A peak that shows up in every blank? Look up its m/z among phthalates, siloxanes, column bleed, plastic additives and other usual suspects.",
   "home.soon": "Coming soon",
-  "home.soonList": "<li><b>Method translator</b> HPLC → UHPLC and GC flow calculator</li><li><b>GC or LC?</b> from the drawn structure</li><li><b>Green metrics</b>: AGREEprep and BAGI</li>",
+  "home.soonList": "<li><b>GC or LC?</b> from the drawn structure</li><li><b>Green metrics</b>: AGREEprep and BAGI</li>",
   "cal.h1": "Calibration and validation",
   "cal.intro": "One line per standard: concentration and response (area, or analyte/internal standard ratio). You can paste two columns straight from Excel; comma or point decimals both work.",
   "cal.unit": "Standard units", "cal.weight": "Weighting", "cal.w0": "Unweighted",

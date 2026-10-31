@@ -104,8 +104,20 @@ function simLC(p, cmps) {
   const t0 = Vm / p.F;                               // min
   const tD = p.Vd / p.F;                             // min
   const f0 = p.b0 / 100, f1 = p.b1 / 100;
-  const tEnd = p.h0 + p.tg + p.h1;
-  const phiAt = (t) => (t <= p.h0 ? f0 : t <= p.h0 + p.tg ? f0 + (f1 - f0) * (t - p.h0) / p.tg : f1);
+  let tEnd = p.h0 + p.tg + p.h1;
+  let phiAt = (t) => (t <= p.h0 ? f0 : t <= p.h0 + p.tg ? f0 + (f1 - f0) * (t - p.h0) / p.tg : f1);
+  if (p.prog && p.prog.length) { // gradiente por tramos: [[t, %B], …]
+    const pr = p.prog;
+    tEnd = pr[pr.length - 1][0];
+    phiAt = (t) => {
+      if (t <= pr[0][0]) return pr[0][1] / 100;
+      for (let j = 1; j < pr.length; j++) if (t <= pr[j][0]) {
+        const [ta, ba] = pr[j - 1], [tb, bb] = pr[j];
+        return (tb > ta ? ba + (bb - ba) * (t - ta) / (tb - ta) : bb) / 100;
+      }
+      return pr[pr.length - 1][1] / 100;
+    };
+  }
   const uCm = Lcm / (t0 * 60);                       // cm/s
   const dpCm = p.dp * 1e-4;
   const sFac = p.org === "acn" ? 1 : 0.8;
@@ -136,7 +148,7 @@ function simLC(p, cmps) {
 
   // presión máxima a lo largo del programa
   let etaMax = 0;
-  for (let j = 0; j <= 50; j++) etaMax = Math.max(etaMax, etaMix(Math.min(f0, f1) + Math.abs(f1 - f0) * j / 50, p.org));
+  for (let j = 0; j <= 200; j++) etaMax = Math.max(etaMax, etaMix(phiAt(tEnd * j / 200), p.org));
   const uM = uCm / 100, Lm = Lcm / 100, dpM = dpCm / 100;
   const dPbar = 1000 * etaMax * 1e-3 * Lm * uM / (dpM * dpM) / 1e5;
   return { t0, tD, tEnd, phiAt, peaks, dPbar, uCm };
@@ -216,12 +228,12 @@ function resolutions(peaks) {
   return el;
 }
 
-function drawChrom(sim, isLC) {
+function drawChrom(sim, isLC, elId = "chChart", tMaxFix = 0) {
   const el = resolutions(sim.peaks);
   const W = 1000, H = 340, m = { l: 50, r: 54, t: 26, b: 42 };
   const pw = W - m.l - m.r, ph = H - m.t - m.b;
   const lastT = el.length ? el[el.length - 1].tR + 5 * el[el.length - 1].sigma : sim.tEnd;
-  const tMax = Math.max(sim.tEnd, lastT) * 1.03;
+  const tMax = tMaxFix || Math.max(sim.tEnd, lastT) * 1.03;
   const X = (t) => m.l + t / tMax * pw;
   // señal: suma de gaussianas con área fija por compuesto (alturas ∝ 1/σ)
   const areas = el.map((p) => 0.6 + 0.4 * Math.abs(Math.sin(p.i * 2.17 + 1)));
@@ -267,7 +279,7 @@ function drawChrom(sim, isLC) {
   s += `<text class="lab" x="${m.l + pw / 2}" y="${H - 6}" text-anchor="middle">${L("Tiempo (min)", "Time (min)")}</text>`;
   s += `<text class="lab" transform="translate(14 ${m.t + ph / 2}) rotate(-90)" text-anchor="middle">${L("Señal", "Signal")}</text>`;
   s += `</svg>`;
-  $("chChart").innerHTML = s;
+  $(elId).innerHTML = s;
   return el;
 }
 

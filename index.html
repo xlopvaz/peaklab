@@ -23,6 +23,7 @@
     <a href="#masas" data-tab="masas" data-i18n="nav.mass">Masas</a>
     <a href="#dibujar" data-tab="dibujar" data-i18n="nav.draw">Dibujar</a>
     <a href="#cromatografia" data-tab="cromatografia" data-i18n="nav.chrom">Cromatografía</a>
+    <a href="#metodos" data-tab="metodos" data-i18n="nav.methods">Métodos</a>
     <a href="#fondo" data-tab="fondo" data-i18n="nav.bg">Iones de fondo</a>
   </nav>
   <div class="top-actions">
@@ -67,6 +68,11 @@
       <h2 data-i18n="home.c5t">Simulador de cromatogramas</h2>
       <p data-i18n="home.c5p">HPLC y GC: mueve el gradiente, la rampa de temperatura o la columna y mira cómo cambian los tiempos de retención, la resolución y la presión.</p>
     </a>
+    <a class="card tool-card" href="#metodos">
+      <span class="tool-ico">⇄</span>
+      <h2 data-i18n="home.c6t">Transferencia de métodos</h2>
+      <p data-i18n="home.c6p">Pasa un método de HPLC a UHPLC (o a cualquier otra columna) con el gradiente, el flujo y el volumen de inyección escalados, y calcula flujos y presiones de GC.</p>
+    </a>
     <a class="card tool-card" href="#fondo">
       <span class="tool-ico">?</span>
       <h2 data-i18n="home.c4t">Iones de fondo</h2>
@@ -77,7 +83,6 @@
   <div class="soon">
     <h3 data-i18n="home.soon">Próximamente</h3>
     <ul data-i18n="home.soonList">
-      <li><b>Traductor de métodos</b> HPLC → UHPLC y calculadora de flujos de GC</li>
       <li><b>¿GC o LC?</b> a partir de la estructura dibujada</li>
       <li><b>Métricas verdes</b>: AGREEprep y BAGI</li>
     </ul>
@@ -443,6 +448,117 @@
   </div>
 </section>
 
+<!-- ===================== MÉTODOS ===================== -->
+<section id="metodos" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="mt.h1">Transferencia de métodos</h1>
+    <p data-i18n="mt.intro">Escala un método de HPLC a otra columna conservando la separación, o calcula la presión, la velocidad y el tiempo muerto de una columna de GC.</p>
+  </div>
+
+  <div class="seg big" id="mtMode">
+    <button type="button" data-m="lc" class="on">HPLC → UHPLC</button>
+    <button type="button" data-m="gc" data-i18n="mt.gcTab">Flujos de GC</button>
+  </div>
+
+  <!-- ---------- Traductor HPLC ---------- -->
+  <div id="mtLc">
+    <div class="grid-2">
+      <div class="card">
+        <h2 class="card-title" data-i18n="mt.orig">Método original</h2>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.len">Longitud (mm)</span><input id="mtL1" type="text" inputmode="decimal" value="150"></label>
+          <label class="field grow"><span data-i18n="ch.id">Diámetro interno (mm)</span><input id="mtD1" type="text" inputmode="decimal" value="4.6"></label>
+          <label class="field grow"><span data-i18n="ch.dp">Partícula (µm)</span><input id="mtP1" type="text" inputmode="decimal" value="5"></label>
+        </div>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.flow">Flujo (mL/min)</span><input id="mtF1" type="text" inputmode="decimal" value="1"></label>
+          <label class="field grow"><span data-i18n="mt.inj">Volumen de inyección (µL)</span><input id="mtI1" type="text" inputmode="decimal" value="20"></label>
+          <label class="field grow"><span data-i18n="ch.dwell">Volumen de retardo (mL)</span><input id="mtV1" type="text" inputmode="decimal" value="1"></label>
+        </div>
+        <label class="field"><span><span data-i18n="mt.p1">Presión del método original (bar)</span> <span class="hint" data-i18n="mt.p1Hint">opcional, para estimar la nueva</span></span><input id="mtPr1" type="text" inputmode="decimal" placeholder="—"></label>
+        <label class="field"><span><span data-i18n="mt.grad">Gradiente</span> <span class="hint" data-i18n="mt.gradHint">tiempo (min) ; % B</span></span>
+          <textarea id="mtG1" rows="6" spellcheck="false"></textarea></label>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title" data-i18n="mt.new">Nueva columna</h2>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.len">Longitud (mm)</span><input id="mtL2" type="text" inputmode="decimal" value="50"></label>
+          <label class="field grow"><span data-i18n="ch.id">Diámetro interno (mm)</span><input id="mtD2" type="text" inputmode="decimal" value="2.1"></label>
+          <label class="field grow"><span data-i18n="ch.dp">Partícula (µm)</span><input id="mtP2" type="text" inputmode="decimal" value="1.7"></label>
+        </div>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="mt.fmode">Flujo nuevo</span>
+            <select id="mtFm">
+              <option value="opt" data-i18n="mt.fOpt">Escalar por diámetro y partícula (recomendado)</option>
+              <option value="geo" data-i18n="mt.fGeo">Escalar solo por diámetro</option>
+              <option value="man" data-i18n="mt.fMan">Flujo manual</option>
+            </select></label>
+          <label class="field grow" id="mtF2wrap"><span data-i18n="mt.f2">Flujo manual (mL/min)</span><input id="mtF2" type="text" inputmode="decimal" value="0.4"></label>
+        </div>
+        <label class="field"><span><span data-i18n="mt.v2">Volumen de retardo del nuevo equipo (mL)</span> <span class="hint" data-i18n="mt.v2Hint">UHPLC típico: 0,1–0,4</span></span><input id="mtV2" type="text" inputmode="decimal" value="0.15"></label>
+        <h3 class="card-title" style="margin-top:6px" data-i18n="mt.newGrad">Gradiente escalado</h3>
+        <div class="table-wrap"><table id="mtGtab" class="data compact"></table></div>
+        <div class="btn-row" style="margin-top:10px">
+          <button type="button" class="btn ghost" id="mtCopy" data-i18n="mt.copy">Copiar gradiente</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <h2 class="card-title" data-i18n="mt.res">Resultado</h2>
+      <div id="mtStats" class="stats three"></div>
+      <div id="mtNotes" class="notes"></div>
+    </div>
+
+    <figure class="card chart-card chrom-card">
+      <figcaption><span data-i18n="mt.cmpChrom">Comparación simulada</span> <span class="hint" data-i18n="mt.cmpHint">con los compuestos y el disolvente del simulador de HPLC</span></figcaption>
+      <div class="seg" id="mtScale">
+        <button type="button" data-s="own" class="on" data-i18n="mt.sOwn">Cada uno a su escala</button>
+        <button type="button" data-s="same" data-i18n="mt.sSame">Misma escala de tiempo</button>
+      </div>
+      <p class="mini-lab" data-i18n="mt.lab1">Original</p>
+      <div id="mtChart1" class="chart chrom"></div>
+      <p class="mini-lab" data-i18n="mt.lab2">Transferido</p>
+      <div id="mtChart2" class="chart chrom"></div>
+    </figure>
+  </div>
+
+  <!-- ---------- Flujos GC ---------- -->
+  <div id="mtGc" hidden>
+    <div class="grid-2">
+      <div class="card">
+        <h2 class="card-title" data-i18n="ch.column">Columna</h2>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.lenm">Longitud (m)</span><input id="gfL" type="text" inputmode="decimal" value="30"></label>
+          <label class="field grow"><span data-i18n="ch.id">Diámetro interno (mm)</span><input id="gfD" type="text" inputmode="decimal" value="0.25"></label>
+        </div>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.gas">Gas portador</span>
+            <select id="gfGas"><option value="he" data-i18n="ch.he">Helio</option><option value="h2" data-i18n="ch.h2">Hidrógeno</option><option value="n2" data-i18n="ch.n2">Nitrógeno</option></select></label>
+          <label class="field grow"><span data-i18n="gf.out">Salida de la columna</span>
+            <select id="gfOut"><option value="atm" data-i18n="gf.atm">Atmosférica (FID, ECD, NPD…)</option><option value="vac" data-i18n="gf.vac">Vacío (espectrómetro de masas)</option></select></label>
+        </div>
+        <div class="field-row wrap">
+          <label class="field grow"><span data-i18n="ch.flow">Flujo (mL/min)</span><input id="gfF" type="text" inputmode="decimal" value="1"></label>
+          <label class="field grow"><span data-i18n="gf.T">Temperatura del horno (°C)</span><input id="gfT" type="text" inputmode="decimal" value="50"></label>
+        </div>
+        <p class="hint small" data-i18n="gf.note">Flujo en condiciones de referencia (25 °C, 1 atm), como lo muestran los controladores electrónicos de presión. Cálculo por la ecuación de Hagen-Poiseuille para gas compresible.</p>
+      </div>
+      <div class="card">
+        <h2 class="card-title" data-i18n="mt.res">Resultado</h2>
+        <div id="gfStats" class="stats"></div>
+        <div id="gfNotes" class="notes"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2 class="card-title" data-i18n="gf.tab">Flujo constante frente a presión constante</h2>
+      <p class="muted small" data-i18n="gf.tabP">Qué pasa al subir la temperatura del horno: en flujo constante el equipo sube la presión; en presión constante el flujo baja porque el gas se vuelve más viscoso.</p>
+      <div class="table-wrap"><table id="gfTable" class="data compact"></table></div>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== FONDO ===================== -->
 <section id="fondo" class="view" hidden>
   <div class="view-head">
@@ -486,5 +602,6 @@
 
 <script src="script.js"></script>
 <script src="chroma.js"></script>
+<script src="transfer.js"></script>
 </body>
 </html>
