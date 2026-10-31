@@ -77,10 +77,21 @@ function t95(df) {
    Textos de la página en inglés (el español está en el HTML)
    ========================================================= */
 const EN = {
-  "nav.aria": "Tools", "nav.cal": "Calibration", "nav.mass": "Masses", "nav.draw": "Draw", "nav.bg": "Background ions",
+  "nav.aria": "Tools", "nav.cal": "Calibration and validation", "nav.mass": "Masses and spectra", "nav.draw": "Draw · GC or LC?", "nav.bg": "Background ions",
   theme: "Toggle theme",
-  "home.h1": "Lab calculations, <span>without spreadsheets</span>.",
-  "home.lead": "Calibration curves, LOD and LOQ, matrix effect, recoveries, ion ratios, adducts, simulated isotope spectra, a molecule editor and a finder for common GC-MS and LC-MS contaminants. Everything runs in your browser.",
+  "home.h1": "Tools for the <span>chromatography</span> lab.",
+  "home.lead": "Compound data before you inject, method development and transfer, injection sequences, calibration and validation, troubleshooting and working reference data. Everything runs in your browser.",
+  "nav.open": "Menu", "nav.gCompound": "Compound", "nav.gMethod": "Method", "nav.gResults": "Results", "nav.gRef": "Reference",
+  "nav.compound": "Compound data", "nav.compoundD": "Properties, pKa and logD, retention indices, hazards",
+  "nav.drawD": "Structure editor and recommended technique", "nav.massD": "Adducts, isotope pattern, ppm error",
+  "nav.chromD": "HPLC and GC: retention, resolution, pressure", "nav.methodsD": "HPLC → UHPLC and GC flows",
+  "nav.seq": "Injection sequence", "nav.seqD": "Standards, blanks, QCs and samples; CSV export",
+  "nav.greenD": "AGREEprep and BAGI with pictograms", "nav.calD": "Curve, LOD/LOQ, recovery, matrix effect",
+  "nav.bgD": "Common contaminants by m/z", "nav.trouble": "Troubleshooting", "nav.troubleD": "Causes and fixes in GC, LC and MS",
+  "nav.deriv": "Derivatization", "nav.derivD": "Reagents, conditions and derivative mass",
+  "nav.cols": "Columns", "nav.colsD": "GC equivalents and USP codes",
+  "nav.solv": "Solvents and buffers", "nav.solvD": "Properties, buffers and vapour volume",
+  "nav.guide": "Guidelines", "nav.guideD": "SANTE, 2021/808, ICH Q2(R2), USP <621>",
   "home.c1t": "Calibration and validation",
   "home.c1p": "Paste concentrations and areas from Excel. Weighted or unweighted regression, residuals, LOD/LOQ, sample concentrations with confidence intervals, matrix effect, recovery and ion ratios.",
   "home.c2t": "Masses and spectra",
@@ -143,7 +154,7 @@ function applyStatic() {
     el.setAttribute("aria-label", LANG === "en" ? EN[el.dataset.i18nAria] : el.dataset.esAria);
   });
   $("langBtn").textContent = LANG === "en" ? "ES" : "EN";
-  document.title = L("PeakLab · herramientas de química analítica", "PeakLab · analytical chemistry tools");
+  document.title = L("PeakLab · herramientas para cromatografía", "PeakLab · chromatography tools");
 }
 
 /* =========================================================
@@ -168,11 +179,36 @@ function route() {
   if (!VIEWS.includes(id)) id = "inicio";
   CURRENT = id;
   VIEWS.forEach((v) => { $(v).hidden = v !== id; });
-  document.querySelectorAll(".tabs a").forEach((a) => a.classList.toggle("active", a.dataset.tab === id));
+  document.querySelectorAll(".menu a[data-tab]").forEach((a) => a.classList.toggle("active", a.dataset.tab === id));
+  document.querySelectorAll(".mgroup").forEach((g) => g.classList.toggle("active", !!g.querySelector(`a[data-tab="${id}"]`)));
+  closeMenus();
   window.scrollTo(0, 0);
   if (id === "dibujar") initDraw();
 }
 window.addEventListener("hashchange", route);
+
+/* ---------- Menús desplegables ---------- */
+function closeMenus() {
+  document.querySelectorAll(".mgroup.open").forEach((g) => { g.classList.remove("open"); g.querySelector(".mbtn").setAttribute("aria-expanded", "false"); });
+  const m = document.getElementById("menu");
+  if (m && m.classList.contains("open")) { m.classList.remove("open"); document.getElementById("menuBtn").setAttribute("aria-expanded", "false"); }
+}
+document.querySelectorAll(".mgroup .mbtn").forEach((b) => b.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const g = b.parentElement, was = g.classList.contains("open");
+  if (!document.getElementById("menu").classList.contains("open")) document.querySelectorAll(".mgroup.open").forEach((x) => x.classList.remove("open"));
+  g.classList.toggle("open", !was);
+  b.setAttribute("aria-expanded", String(!was));
+}));
+document.getElementById("menuBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  const m = document.getElementById("menu"), open = !m.classList.contains("open");
+  m.classList.toggle("open", open);
+  document.getElementById("menuBtn").setAttribute("aria-expanded", String(open));
+});
+document.addEventListener("click", (e) => { if (!e.target.closest(".menu") && !e.target.closest("#menuBtn")) closeMenus(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenus(); });
+document.querySelectorAll(".menu a").forEach((a) => a.addEventListener("click", () => closeMenus()));
 
 (function heroTrace() {
   const peaks = [[70, 18, 5], [140, 60, 4], [205, 30, 6], [300, 120, 5], [330, 45, 4], [430, 85, 7], [520, 25, 5], [600, 135, 6], [690, 50, 8], [745, 20, 6]];

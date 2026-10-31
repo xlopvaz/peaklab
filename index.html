@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PeakLab · herramientas de química analítica</title>
-<meta name="description" content="Calibrado, validación, aductos, patrones isotópicos, editor de moléculas e iones de fondo para GC-MS y LC-MS. Todo se calcula en tu navegador.">
+<title>PeakLab · chromatography tools</title>
+<meta name="description" content="Free tools for GC and LC laboratories: compound data, method development and transfer, injection sequences, calibration and validation, troubleshooting and reference data.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e6b63'/%3E%3Cpath d='M4 25 C11 25 12 6 16 6 S21 25 28 25' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,19 +18,49 @@
     <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7"/><path d="M4 25 C11 25 12 6 16 6 S21 25 28 25"/></svg>
     <span>Peak<b>Lab</b></span>
   </a>
-  <nav class="tabs" data-i18n-aria="nav.aria" aria-label="Herramientas">
-    <a href="#calibrado" data-tab="calibrado" data-i18n="nav.cal">Calibrado</a>
-    <a href="#masas" data-tab="masas" data-i18n="nav.mass">Masas</a>
-    <a href="#dibujar" data-tab="dibujar" data-i18n="nav.draw">Dibujar</a>
-    <a href="#cromatografia" data-tab="cromatografia" data-i18n="nav.chrom">Cromatografía</a>
-    <a href="#metodos" data-tab="metodos" data-i18n="nav.methods">Métodos</a>
-    <a href="#verde" data-tab="verde" data-i18n="nav.green">Métricas verdes</a>
-    <a href="#fondo" data-tab="fondo" data-i18n="nav.bg">Iones de fondo</a>
+  <nav class="menu" id="menu" data-i18n-aria="nav.aria" aria-label="Herramientas">
+    <div class="mgroup" data-g="compound">
+      <button type="button" class="mbtn" aria-expanded="false"><span data-i18n="nav.gCompound">Compuesto</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <div class="mdrop">
+      <a href="#compuesto" data-tab="compuesto"><b data-i18n="nav.compound">Ficha de compuesto</b><span data-i18n="nav.compoundD">Propiedades, pKa y logD, índices de retención, peligros</span></a>
+      <a href="#dibujar" data-tab="dibujar"><b data-i18n="nav.draw">Dibujar · ¿GC o LC?</b><span data-i18n="nav.drawD">Editor de estructuras y técnica recomendada</span></a>
+      <a href="#masas" data-tab="masas"><b data-i18n="nav.mass">Masas y espectros</b><span data-i18n="nav.massD">Aductos, patrón isotópico, error en ppm</span></a>
+      </div>
+    </div>
+    <div class="mgroup" data-g="method">
+      <button type="button" class="mbtn" aria-expanded="false"><span data-i18n="nav.gMethod">Método</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <div class="mdrop">
+      <a href="#cromatografia" data-tab="cromatografia"><b data-i18n="nav.chrom">Simulador de cromatogramas</b><span data-i18n="nav.chromD">HPLC y GC: retención, resolución, presión</span></a>
+      <a href="#metodos" data-tab="metodos"><b data-i18n="nav.methods">Transferencia de métodos</b><span data-i18n="nav.methodsD">HPLC → UHPLC y flujos de GC</span></a>
+      <a href="#secuencia" data-tab="secuencia"><b data-i18n="nav.seq">Secuencia de inyección</b><span data-i18n="nav.seqD">Patrones, blancos, QC y muestras; exporta CSV</span></a>
+      <a href="#verde" data-tab="verde"><b data-i18n="nav.green">Métricas verdes</b><span data-i18n="nav.greenD">AGREEprep y BAGI con pictogramas</span></a>
+      </div>
+    </div>
+    <div class="mgroup" data-g="results">
+      <button type="button" class="mbtn" aria-expanded="false"><span data-i18n="nav.gResults">Resultados</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <div class="mdrop">
+      <a href="#calibrado" data-tab="calibrado"><b data-i18n="nav.cal">Calibrado y validación</b><span data-i18n="nav.calD">Recta, LOD/LOQ, recuperación, efecto matriz</span></a>
+      <a href="#fondo" data-tab="fondo"><b data-i18n="nav.bg">Iones de fondo</b><span data-i18n="nav.bgD">Contaminantes habituales por m/z</span></a>
+      <a href="#problemas" data-tab="problemas"><b data-i18n="nav.trouble">Diagnóstico de problemas</b><span data-i18n="nav.troubleD">Causas y soluciones en GC, LC y MS</span></a>
+      </div>
+    </div>
+    <div class="mgroup" data-g="reference">
+      <button type="button" class="mbtn" aria-expanded="false"><span data-i18n="nav.gRef">Referencia</span><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <div class="mdrop">
+      <a href="#derivatizacion" data-tab="derivatizacion"><b data-i18n="nav.deriv">Derivatización</b><span data-i18n="nav.derivD">Reactivos, condiciones y masa del derivado</span></a>
+      <a href="#columnas" data-tab="columnas"><b data-i18n="nav.cols">Columnas</b><span data-i18n="nav.colsD">Equivalencias GC y códigos USP</span></a>
+      <a href="#disolventes" data-tab="disolventes"><b data-i18n="nav.solv">Disolventes y tampones</b><span data-i18n="nav.solvD">Propiedades, tampones y volumen de vapor</span></a>
+      <a href="#normativa" data-tab="normativa"><b data-i18n="nav.guide">Normativa</b><span data-i18n="nav.guideD">SANTE, 2021/808, ICH Q2(R2), USP <621></span></a>
+      </div>
+    </div>
   </nav>
   <div class="top-actions">
     <button id="langBtn" class="icon-btn lang" type="button" title="English / Español">EN</button>
     <button id="themeBtn" class="icon-btn" type="button" data-i18n-aria="theme" aria-label="Cambiar tema">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+    </button>
+    <button id="menuBtn" class="icon-btn menu-btn" type="button" data-i18n-aria="nav.open" aria-label="Menú" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
   </div>
 </header>
@@ -43,54 +73,96 @@
     <svg class="hero-trace" viewBox="0 0 800 160" preserveAspectRatio="none" aria-hidden="true">
       <path id="heroPath" d=""/>
     </svg>
-    <p class="eyebrow">GC · LC · MS/MS</p>
-    <h1 data-i18n="home.h1">Las cuentas del laboratorio, <span>sin hojas de Excel</span>.</h1>
-    <p class="lead" data-i18n="home.lead">Recta de calibrado, LOD y LOQ, efecto matriz, recuperaciones, relación de iones, aductos, espectros isotópicos simulados, un editor de moléculas y un buscador de contaminantes típicos de GC-MS y LC-MS. Todo se calcula en tu navegador.</p>
+    <p class="eyebrow">GC · LC · MS</p>
+    <h1 data-i18n="home.h1">Herramientas para el laboratorio de <span>cromatografía</span>.</h1>
+    <p class="lead" data-i18n="home.lead">Datos del compuesto antes de inyectar, desarrollo y transferencia de métodos, secuencias, calibrado y validación, diagnóstico de problemas y referencias de trabajo. Todo se calcula en tu navegador.</p>
   </div>
 
+  <h2 class="home-group" data-i18n="nav.gCompound">Compuesto</h2>
   <div class="cards four">
-    <a class="card tool-card" href="#calibrado">
-      <span class="tool-ico">y = bx + a</span>
-      <h2 data-i18n="home.c1t">Calibrado y validación</h2>
-      <p data-i18n="home.c1p">Pega concentraciones y áreas desde Excel. Regresión con o sin ponderación, residuales, LOD/LOQ, concentración de tus muestras con su intervalo de confianza, efecto matriz, recuperación y relación de iones.</p>
-    </a>
-    <a class="card tool-card" href="#masas">
-      <span class="tool-ico">m/z</span>
-      <h2 data-i18n="home.c2t">Masas y espectros</h2>
-      <p data-i18n="home.c2p">Masa monoisotópica, aductos de ESI y EI, error en ppm y el espectro isotópico simulado a la resolución de tu equipo, de un cuadrupolo a un Orbitrap.</p>
-    </a>
-    <a class="card tool-card" href="#dibujar">
-      <span class="tool-ico">⌬</span>
-      <h2 data-i18n="home.c3t">Dibujar moléculas</h2>
-      <p data-i18n="home.c3p">Editor de estructuras al estilo ChemDraw. Dibuja o busca en PubChem por nombre, CAS o SMILES, y pasa la fórmula a la calculadora de masas con un clic.</p>
-    </a>
-    <a class="card tool-card" href="#cromatografia">
-      <span class="tool-ico">⩘</span>
-      <h2 data-i18n="home.c5t">Simulador de cromatogramas</h2>
-      <p data-i18n="home.c5p">HPLC y GC: mueve el gradiente, la rampa de temperatura o la columna y mira cómo cambian los tiempos de retención, la resolución y la presión.</p>
-    </a>
-    <a class="card tool-card" href="#metodos">
-      <span class="tool-ico">⇄</span>
-      <h2 data-i18n="home.c6t">Transferencia de métodos</h2>
-      <p data-i18n="home.c6p">Pasa un método de HPLC a UHPLC (o a cualquier otra columna) con el gradiente, el flujo y el volumen de inyección escalados, y calcula flujos y presiones de GC.</p>
+    <a class="card tool-card" href="#compuesto">
+      <span class="tool-ico">pKa</span>
+      <h2 data-i18n="nav.compound">Ficha de compuesto</h2>
+      <p data-i18n="nav.compoundD">Propiedades, pKa y logD, índices de retención, peligros</p>
     </a>
     <a class="card tool-card" href="#dibujar">
       <span class="tool-ico">GC/LC</span>
-      <h2 data-i18n="home.c8t">¿GC o LC?</h2>
-      <p data-i18n="home.c8p">Dibuja una molécula y te recomienda GC o LC, con qué columna, detector o modo de ionización, y si necesita derivatización.</p>
+      <h2 data-i18n="nav.draw">Dibujar · ¿GC o LC?</h2>
+      <p data-i18n="nav.drawD">Editor de estructuras y técnica recomendada</p>
     </a>
-    <a class="card tool-card" href="#verde">
-      <span class="tool-ico">0.62</span>
-      <h2 data-i18n="home.c7t">Métricas verdes</h2>
-      <p data-i18n="home.c7p">Puntúa la preparación de muestra con AGREEprep y la practicidad del método con BAGI, y descarga los pictogramas para tu memoria.</p>
-    </a>
-    <a class="card tool-card" href="#fondo">
-      <span class="tool-ico">?</span>
-      <h2 data-i18n="home.c4t">Iones de fondo</h2>
-      <p data-i18n="home.c4p">¿Un pico que aparece en todos los blancos? Busca su m/z entre ftalatos, siloxanos, sangrado de columna, aditivos de plásticos y otros contaminantes habituales.</p>
+    <a class="card tool-card" href="#masas">
+      <span class="tool-ico">m/z</span>
+      <h2 data-i18n="nav.mass">Masas y espectros</h2>
+      <p data-i18n="nav.massD">Aductos, patrón isotópico, error en ppm</p>
     </a>
   </div>
 
+  <h2 class="home-group" data-i18n="nav.gMethod">Método</h2>
+  <div class="cards four">
+    <a class="card tool-card" href="#cromatografia">
+      <span class="tool-ico">tR</span>
+      <h2 data-i18n="nav.chrom">Simulador de cromatogramas</h2>
+      <p data-i18n="nav.chromD">HPLC y GC: retención, resolución, presión</p>
+    </a>
+    <a class="card tool-card" href="#metodos">
+      <span class="tool-ico">⇄</span>
+      <h2 data-i18n="nav.methods">Transferencia de métodos</h2>
+      <p data-i18n="nav.methodsD">HPLC → UHPLC y flujos de GC</p>
+    </a>
+    <a class="card tool-card" href="#secuencia">
+      <span class="tool-ico">1·2·3</span>
+      <h2 data-i18n="nav.seq">Secuencia de inyección</h2>
+      <p data-i18n="nav.seqD">Patrones, blancos, QC y muestras; exporta CSV</p>
+    </a>
+    <a class="card tool-card" href="#verde">
+      <span class="tool-ico">0.62</span>
+      <h2 data-i18n="nav.green">Métricas verdes</h2>
+      <p data-i18n="nav.greenD">AGREEprep y BAGI con pictogramas</p>
+    </a>
+  </div>
+
+  <h2 class="home-group" data-i18n="nav.gResults">Resultados</h2>
+  <div class="cards four">
+    <a class="card tool-card" href="#calibrado">
+      <span class="tool-ico">y = bx + a</span>
+      <h2 data-i18n="nav.cal">Calibrado y validación</h2>
+      <p data-i18n="nav.calD">Recta, LOD/LOQ, recuperación, efecto matriz</p>
+    </a>
+    <a class="card tool-card" href="#fondo">
+      <span class="tool-ico">m/z ?</span>
+      <h2 data-i18n="nav.bg">Iones de fondo</h2>
+      <p data-i18n="nav.bgD">Contaminantes habituales por m/z</p>
+    </a>
+    <a class="card tool-card" href="#problemas">
+      <span class="tool-ico">!</span>
+      <h2 data-i18n="nav.trouble">Diagnóstico de problemas</h2>
+      <p data-i18n="nav.troubleD">Causas y soluciones en GC, LC y MS</p>
+    </a>
+  </div>
+
+  <h2 class="home-group" data-i18n="nav.gRef">Referencia</h2>
+  <div class="cards four">
+    <a class="card tool-card" href="#derivatizacion">
+      <span class="tool-ico">+TMS</span>
+      <h2 data-i18n="nav.deriv">Derivatización</h2>
+      <p data-i18n="nav.derivD">Reactivos, condiciones y masa del derivado</p>
+    </a>
+    <a class="card tool-card" href="#columnas">
+      <span class="tool-ico">G27</span>
+      <h2 data-i18n="nav.cols">Columnas</h2>
+      <p data-i18n="nav.colsD">Equivalencias GC y códigos USP</p>
+    </a>
+    <a class="card tool-card" href="#disolventes">
+      <span class="tool-ico">pH</span>
+      <h2 data-i18n="nav.solv">Disolventes y tampones</h2>
+      <p data-i18n="nav.solvD">Propiedades, tampones y volumen de vapor</p>
+    </a>
+    <a class="card tool-card" href="#normativa">
+      <span class="tool-ico">±30 %</span>
+      <h2 data-i18n="nav.guide">Normativa</h2>
+      <p data-i18n="nav.guideD">SANTE, 2021/808, ICH Q2(R2), USP <621></p>
+    </a>
+  </div>
 </section>
 
 <!-- ===================== CALIBRADO ===================== -->
@@ -284,6 +356,25 @@
   </div>
 </section>
 
+<!-- ===================== FICHA DE COMPUESTO ===================== -->
+<section id="compuesto" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="cp.h1">Ficha de compuesto</h1>
+    <p data-i18n="cp.intro">Lo que conviene saber de un analito antes de preparar la muestra o elegir el método: propiedades fisicoquímicas experimentales, pKa y logD frente al pH, índices de retención en GC, peligros y técnica recomendada. Datos de PubChem, con su fuente original.</p>
+  </div>
+  <div class="card">
+    <form id="cpForm" class="field-row wrap pc-row">
+      <label class="field grow"><span><span data-i18n="cp.q">Compuesto</span> <span class="hint" data-i18n="cp.qHint">nombre en inglés, nº CAS, SMILES o InChIKey</span></span>
+        <input id="cpQuery" type="text" spellcheck="false" autocomplete="off" placeholder="carbamazepine, 298-46-4, CC(=O)Nc1ccc(O)cc1">
+      </label>
+      <button type="submit" class="btn" id="cpBtn" data-i18n="cp.search">Buscar</button>
+      <button type="button" class="btn ghost" id="cpFromDraw" data-i18n="cp.fromDraw">Usar la estructura dibujada</button>
+    </form>
+    <p id="cpMsg" class="hint small"></p>
+  </div>
+  <div id="cpOut"></div>
+</section>
+
 <!-- ===================== DIBUJAR ===================== -->
 <section id="dibujar" class="view" hidden>
   <div class="view-head">
@@ -310,7 +401,8 @@
       <div id="drName" class="stats single name-box"></div>
       <div id="drOut" class="stats single"></div>
       <div class="btn-col">
-        <button type="button" class="btn" id="drToMass" data-i18n="dr.toMass">Ver aductos y espectro →</button>
+        <button type="button" class="btn" id="drToCompound" data-i18n="dr.toCompound">Ficha del compuesto →</button>
+        <button type="button" class="btn ghost" id="drToMass" data-i18n="dr.toMass">Ver aductos y espectro →</button>
         <button type="button" class="btn ghost" id="drCopySmi" data-i18n="dr.copySmi">Copiar SMILES</button>
         <button type="button" class="btn ghost" id="drPng" data-i18n="dr.png">Descargar imagen (PNG)</button>
         <button type="button" class="btn ghost" id="drClear" data-i18n="dr.clear">Borrar todo</button>
@@ -608,6 +700,164 @@
   <p class="hint small" data-i18n="gr.note">Los pictogramas los dibuja PeakLab con los criterios publicados; su forma no es idéntica a la del software oficial de los autores. Si los usas en una publicación, cita los artículos originales.</p>
 </section>
 
+<!-- ===================== SECUENCIA ===================== -->
+<section id="secuencia" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="sq.h1">Secuencia de inyección</h1>
+    <p data-i18n="sq.intro">Monta una secuencia completa con blancos, idoneidad del sistema, calibrado, controles de calidad y muestras, con la posición de cada vial y la duración. Expórtala en CSV para importarla en el software del equipo o en Excel.</p>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <h2 class="card-title" data-i18n="sq.cal">Calibrado</h2>
+      <label class="field"><span><span data-i18n="sq.levels">Niveles</span> <span class="hint" data-i18n="sq.levelsHint">separados por comas</span></span><input id="sqLevels" type="text"></label>
+      <div class="field-row">
+        <label class="field grow"><span data-i18n="sq.rep">Réplicas por nivel</span><input id="sqCalRep" type="text" inputmode="numeric"></label>
+        <label class="field grow"><span data-i18n="sq.bracket">Repetir al final</span><select id="sqBracket"><option value="no" data-i18n="sq.no">No</option><option value="yes" data-i18n="sq.yesBr">Sí (calibrado de cierre)</option></select></label>
+      </div>
+      <div class="field-row">
+        <label class="field grow"><span data-i18n="sq.sst">Inyecciones de idoneidad (SST)</span><input id="sqSst" type="text" inputmode="numeric"></label>
+        <label class="field grow"><span data-i18n="sq.blankHigh">Blanco tras el patrón alto</span><select id="sqBlankHigh"><option value="yes" data-i18n="sq.yes">Sí</option><option value="no" data-i18n="sq.no">No</option></select></label>
+      </div>
+    </div>
+    <div class="card">
+      <h2 class="card-title" data-i18n="sq.qc">Blancos y controles</h2>
+      <div class="field-row">
+        <label class="field grow"><span data-i18n="sq.solv">Blancos de disolvente al inicio</span><input id="sqSolv" type="text" inputmode="numeric"></label>
+        <label class="field grow"><span data-i18n="sq.proc">Blancos de proceso</span><input id="sqProc" type="text" inputmode="numeric"></label>
+      </div>
+      <label class="field"><span><span data-i18n="sq.qcs">Controles de calidad</span> <span class="hint" data-i18n="sq.qcsHint">nombres separados por comas</span></span><input id="sqQcs" type="text"></label>
+      <div class="field-row">
+        <label class="field grow"><span data-i18n="sq.every">Bloque de control cada (muestras)</span><input id="sqEvery" type="text" inputmode="numeric"></label>
+        <label class="field grow"><span data-i18n="sq.ccv">Incluir CCV (patrón medio)</span><select id="sqCcv"><option value="yes" data-i18n="sq.yes">Sí</option><option value="no" data-i18n="sq.no">No</option></select></label>
+      </div>
+      <label class="field"><span data-i18n="sq.blankQc">Blanco tras cada bloque de control</span><select id="sqBlankQc"><option value="yes" data-i18n="sq.yes">Sí</option><option value="no" data-i18n="sq.no">No</option></select></label>
+    </div>
+    <div class="card">
+      <h2 class="card-title" data-i18n="sq.smp">Muestras y equipo</h2>
+      <label class="field"><span><span data-i18n="sq.samples">Muestras</span> <span class="hint" data-i18n="sq.samplesHint">una por línea, o solo el número</span></span><textarea id="sqSamples" rows="4" spellcheck="false"></textarea></label>
+      <div class="field-row">
+        <label class="field grow"><span data-i18n="sq.smpRep">Réplicas por muestra</span><input id="sqSmpRep" type="text" inputmode="numeric"></label>
+        <label class="field grow"><span data-i18n="sq.run">Duración por inyección (min)</span><input id="sqRun" type="text" inputmode="decimal"></label>
+      </div>
+      <div class="field-row">
+        <label class="field grow"><span data-i18n="sq.vol">Volumen de inyección (µL)</span><input id="sqVol" type="text" inputmode="decimal"></label>
+        <label class="field grow"><span data-i18n="sq.method">Método</span><input id="sqMethod" type="text"></label>
+      </div>
+      <div class="field-row">
+        <label class="field grow"><span data-i18n="sq.tray">Bandeja</span><select id="sqTray"><option value="num" data-i18n="sq.trayNum">Posiciones numeradas</option><option value="p96" data-i18n="sq.tray96">Placa de 96 (A1–H12)</option><option value="r54" data-i18n="sq.tray54">Gradilla de 54 (A1–F9)</option></select></label>
+        <label class="field grow"><span data-i18n="sq.start">Primera posición</span><input id="sqStart" type="text" inputmode="numeric"></label>
+      </div>
+      <div class="field-row">
+        <label class="field grow"><span data-i18n="sq.prefix">Prefijo de archivos</span><input id="sqPrefix" type="text" placeholder="2026-10-31_PFAS"></label>
+        <label class="field grow"><span data-i18n="sq.startTime">Hora de inicio</span><input id="sqStartTime" type="text" placeholder="18:30"></label>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="stats four-s" id="sqStats"></div>
+    <div class="btn-row" style="margin:12px 0"><button type="button" class="btn" id="sqCsv" data-i18n="sq.csv">Descargar CSV</button><button type="button" class="btn ghost" id="sqCopy" data-i18n="sq.copy">Copiar para Excel</button></div>
+    <div class="table-wrap"><table id="sqTable" class="data compact"></table></div>
+  </div>
+</section>
+
+<!-- ===================== PROBLEMAS ===================== -->
+<section id="problemas" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="tr.h1">Diagnóstico de problemas</h1>
+    <p data-i18n="tr.intro">Elige la técnica y el síntoma, responde a la pregunta y verás primero las causas más probables, con cómo comprobar cada una y cómo solucionarla.</p>
+  </div>
+  <div class="seg big" id="trTech"><button type="button" data-t="lc">LC</button><button type="button" data-t="gc">GC</button><button type="button" data-t="ms">MS</button></div>
+  <div id="trBody"></div>
+</section>
+
+<!-- ===================== DERIVATIZACIÓN ===================== -->
+<section id="derivatizacion" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="dv.h1">Derivatización</h1>
+    <p data-i18n="dv.intro">Reactivos habituales para GC y LC: con qué reaccionan, condiciones típicas e iones diagnóstico. La calculadora te da la fórmula y la masa del derivado para buscarlo en el espectro.</p>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <h2 class="card-title" data-i18n="dv.calc">Calculadora del derivado</h2>
+      <label class="field"><span data-i18n="dv.formula">Fórmula del analito</span><input id="dvFormula" type="text" spellcheck="false"></label>
+      <div class="field-row">
+        <label class="field grow"><span data-i18n="dv.reagent">Reactivo</span><select id="dvReagent"></select></label>
+        <label class="field" style="width:120px"><span data-i18n="dv.sites">Sitios</span><input id="dvSites" type="number" min="0" max="20" step="1"></label>
+      </div>
+      <button type="button" class="btn ghost small-btn" id="dvFromDraw" data-i18n="dv.fromDraw">Usar la estructura dibujada</button>
+    </div>
+    <div class="card"><div id="dvResult"></div></div>
+  </div>
+  <div class="card"><div class="table-wrap"><table id="dvTable" class="data"></table></div>
+    <p class="hint small" data-i18n="dv.note">Condiciones orientativas: optimízalas para tu analito y matriz. Todos estos reactivos son sensibles a la humedad o tóxicos; trabaja en vitrina y consulta la ficha de seguridad.</p></div>
+  <div id="dvBody"></div>
+</section>
+
+<!-- ===================== COLUMNAS ===================== -->
+<section id="columnas" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="co.h1">Columnas</h1>
+    <p data-i18n="co.intro">Fases de GC equivalentes entre fabricantes con su código USP, y códigos L de la USP para LC con columnas de ejemplo y cuándo usarlas.</p>
+  </div>
+  <div class="card"><h2 class="card-title" data-i18n="co.gc">GC: fases equivalentes</h2><div class="table-wrap"><table id="coGc" class="data"></table></div>
+    <p class="hint small" data-i18n="co.gcNote">«Equivalente» significa misma composición de fase; la inercia, el sangrado y el límite de temperatura cambian entre marcas. * Código aproximado: compruébalo con el fabricante.</p></div>
+  <div class="card"><h2 class="card-title" data-i18n="co.lc">LC: códigos USP y columnas de ejemplo</h2><div class="table-wrap"><table id="coLc" class="data"></table></div>
+    <p class="hint small" data-i18n="co.lcNote">En LC, dos columnas con el mismo código USP pueden separar de forma muy distinta. Para buscar sustitutos usa la base de datos de equivalencia de columnas de la USP (PQRI) o la del fabricante. Si dos picos coeluyen en C18, lo que más cambia la selectividad es: metanol ↔ acetonitrilo, pH, fenilo o PFP, y temperatura.</p></div>
+</section>
+
+<!-- ===================== DISOLVENTES ===================== -->
+<section id="disolventes" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="sv.h1">Disolventes y tampones</h1>
+    <p data-i18n="sv.intro">Propiedades de disolventes para LC y GC, volumen de vapor de tu inyección frente al del liner, aditivos de fase móvil y una calculadora de tampones.</p>
+  </div>
+  <div class="card"><h2 class="card-title" data-i18n="sv.props">Propiedades de disolventes</h2><div class="table-wrap"><table id="svTable" class="data compact"></table></div>
+    <p class="hint small" data-i18n="sv.note">Valores habituales a 20–25 °C; el corte UV depende de la calidad del disolvente. P′: índice de polaridad de Snyder.</p></div>
+  <div class="grid-2">
+    <div class="card">
+      <h2 class="card-title" data-i18n="sv.vv">GC: volumen de vapor en el inyector</h2>
+      <div class="field-row wrap">
+        <label class="field grow"><span data-i18n="sv.solvent">Disolvente</span><select id="vvSolv"></select></label>
+        <label class="field grow"><span data-i18n="sv.inj">Volumen inyectado (µL)</span><input id="vvVol" type="text" inputmode="decimal" value="1"></label>
+      </div>
+      <div class="field-row wrap">
+        <label class="field grow"><span data-i18n="sv.T">Temperatura del inyector (°C)</span><input id="vvT" type="text" inputmode="decimal" value="250"></label>
+        <label class="field grow"><span data-i18n="sv.P">Presión en cabeza</span><input id="vvP" type="text" inputmode="decimal" value="10"></label>
+        <label class="field" style="width:96px"><span>&nbsp;</span><select id="vvPu"><option value="psi">psi</option><option value="kPa">kPa</option><option value="bar">bar</option></select></label>
+      </div>
+      <label class="field"><span data-i18n="sv.liner">Volumen del liner</span><select id="vvLiner"><option value="0.9" data-i18n="sv.l4">4 mm d.i. (~0,9 mL)</option><option value="0.25" data-i18n="sv.l2">2 mm d.i. (~0,25 mL)</option><option value="0.75" data-i18n="sv.l4t">4 mm con estrechamiento (~0,75 mL)</option></select></label>
+      <div id="vvOut" class="result"></div>
+    </div>
+    <div class="card">
+      <h2 class="card-title" data-i18n="sv.buf">LC: calculadora de tampones</h2>
+      <label class="field"><span data-i18n="sv.sys">Sistema</span><select id="bfSys">
+        <option value="formate" data-i18n="sv.bFor">Formiato amónico / ácido fórmico (pH 2,8–4,8)</option>
+        <option value="acetate" data-i18n="sv.bAce">Acetato amónico / ácido acético (pH 3,8–5,8)</option>
+        <option value="ammonia" data-i18n="sv.bAmm">Acetato amónico / amoniaco (pH 8,3–10,3)</option>
+        <option value="phosLow" data-i18n="sv.bP1">KH₂PO₄ / H₃PO₄ (pH 1,2–3,2)</option>
+        <option value="phosMid" data-i18n="sv.bP2">KH₂PO₄ / K₂HPO₄ (pH 6,2–8,2)</option></select></label>
+      <div class="field-row wrap">
+        <label class="field grow"><span data-i18n="sv.pH">pH objetivo</span><input id="bfPH" type="text" inputmode="decimal" value="3.5"></label>
+        <label class="field grow"><span data-i18n="sv.conc">Concentración (mM)</span><input id="bfC" type="text" inputmode="decimal" value="10"></label>
+        <label class="field grow"><span data-i18n="sv.vol">Volumen (mL)</span><input id="bfV" type="text" inputmode="decimal" value="1000"></label>
+      </div>
+      <p class="hint small" data-i18n="sv.bufHint">La concentración se refiere a la sal (en fosfato pH 6–8, al fosfato total).</p>
+      <div id="bfOut"></div>
+    </div>
+  </div>
+  <div class="card"><h2 class="card-title" data-i18n="sv.add">Aditivos y tampones de fase móvil</h2><div class="table-wrap"><table id="svAdd" class="data compact"></table></div>
+    <p class="hint small" data-i18n="sv.addNote">Intervalo útil de un tampón: pKa ± 1. Los pKa son en agua a 25 °C; con modificador orgánico el pH aparente cambia.</p></div>
+</section>
+
+<!-- ===================== NORMATIVA ===================== -->
+<section id="normativa" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="nr.h1">Normativa</h1>
+    <p data-i18n="nr.intro">Criterios numéricos clave de las guías más usadas en cromatografía, con enlace al texto oficial. Comprueba siempre la versión en vigor antes de aplicarlos.</p>
+  </div>
+  <div id="nrCards" class="guide-grid"></div>
+</section>
+
 <!-- ===================== FONDO ===================== -->
 <section id="fondo" class="view" hidden>
   <div class="view-head">
@@ -654,5 +904,9 @@
 <script src="transfer.js"></script>
 <script src="advisor.js"></script>
 <script src="green.js"></script>
+<script src="compound.js"></script>
+<script src="troubleshoot.js"></script>
+<script src="reference.js"></script>
+<script src="sequence.js"></script>
 </body>
 </html>

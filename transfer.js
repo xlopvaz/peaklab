@@ -7,7 +7,7 @@
 "use strict";
 
 Object.assign(EN, {
-  "nav.methods": "Methods",
+  "nav.methods": "Method transfer",
   "home.c6t": "Method transfer",
   "home.c6p": "Move an HPLC method to UHPLC (or any other column) with the gradient, flow and injection volume scaled, and work out GC flows and pressures.",
   "mt.h1": "Method transfer",

@@ -9,7 +9,7 @@
 "use strict";
 
 const CH_EN = {
-  "nav.chrom": "Chromatography",
+  "nav.chrom": "Chromatogram simulator",
   "ch.h1": "Chromatogram simulator",
   "ch.intro": "Change the column, gradient or temperature ramp and watch how peaks move, how well they separate and what pressure you would get. It is a simplified physical model: good for understanding and for steering a method, not for replacing experiments.",
   "ch.column": "Column", "ch.len": "Length (mm)", "ch.lenm": "Length (m)", "ch.id": "Internal diameter (mm)", "ch.dp": "Particle size (µm)", "ch.df": "Film thickness (µm)",

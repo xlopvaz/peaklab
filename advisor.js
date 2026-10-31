@@ -31,7 +31,7 @@ function adviseAnalyze(OCL, input) {
 
   const g = {
     acid: 0, carboxylate: 0, ester: 0, sulfonic: 0, sulfate: 0, sulfonamide: 0, phosAcid: 0,
-    phenol: 0, alcohol: 0, amineBasic: 0, amineNH: 0, amideNH: 0, amineQuat: 0, aniline: 0, aromN: 0, amide: 0,
+    phenol: 0, alcohol: 0, amineBasic: 0, amineNH: 0, amideNH: 0, carbonyl: 0, thiol: 0, amineQuat: 0, aniline: 0, aromN: 0, amide: 0,
     carbamate: 0, urea: 0, sulfonylurea: 0, nOxide: 0, peroxide: 0, nitrate: 0, nitro: 0, nitrile: 0,
     F: 0, Cl: 0, Br: 0, I: 0, N: 0, P: 0, S: 0, Si: 0, cf2: 0, metal: [], charged: 0, aromRings: 0,
   };
@@ -58,6 +58,7 @@ function adviseAnalyze(OCL, input) {
           else if (nb(o).some(([b]) => b !== a && Z(b) === 6)) g.ester++;
         }
         // urea y carbamato de cadena abierta (los de anillo, como en la cafeína, son estables)
+        if (!sO.length && !sN.length && nbs.some(([b, o]) => Z(b) === 8 && o === 2)) g.carbonyl++;
         if (sN.length === 2 && !mol.isRingAtom(a)) g.urea++;
         if (sN.length === 1 && sO.length === 1 && !mol.isRingAtom(a)) g.carbamate++;
       }
@@ -66,10 +67,12 @@ function adviseAnalyze(OCL, input) {
       if (nbs.some(([b]) => Z(b) === 8)) g.peroxide++;
       if (h > 0 && nbs.length === 1) {
         const c = nbs[0][0];
+        if (Z(c) === 15) { /* P–OH, ya contado como ácido */ }
         if (Z(c) === 6 && arom(c)) g.phenol++;
         else if (Z(c) === 6 && !isCarbonylC(c)) g.alcohol++;
       }
     }
+    if (z === 16 && h > 0) g.thiol++;
     if (z === 16 && isSulfonylS(a)) {
       const os = nbs.filter(([b, o]) => Z(b) === 8 && o === 1);
       const acidic = os.filter(([b]) => H(b) > 0 || Q(b) === -1).length;
@@ -304,10 +307,14 @@ function renderAdvisor(loading) {
   if (!DRAW.formula) { box.innerHTML = `<p class="muted">${L("Dibuja o carga una molécula y aquí verás si conviene GC o LC, con qué columna, detector o modo de ionización.", "Draw or load a molecule to see whether GC or LC suits it, and with which column, detector or ionization mode.")}</p>`; return; }
   if (ADV.err === "load") { box.innerHTML = `<p class="muted">${L("No se ha podido cargar el módulo de descriptores. Comprueba tu conexión.", "Could not load the descriptor module. Check your connection.")}</p>`; return; }
   if (!ADV.res) { box.innerHTML = `<p class="muted">${loading ? L("Analizando la estructura…", "Analysing the structure…") : esc(ADV.err || "")}</p>`; return; }
-  const r = ADV.res, t = advText(r), d = r.d;
+  advRenderInto(box, ADV.res, () => (DRAW.name && DRAW.name.state === "ok" && DRAW.name.title) || ADV.res.d.formula);
+}
+
+// Pinta el resultado del asesor en cualquier contenedor (también lo usa la ficha de compuesto)
+function advRenderInto(box, r, getName) {
+  const t = advText(r), d = r.d;
   const lv = (k, v) => { const [es, en, c] = ADV_LEVEL[k][v]; return `<span class="pill ${c}">${L(es, en)}</span>`; };
   const li = (arr) => arr.map((x) => `<li>${x}</li>`).join("");
-
   const gcHow = [];
   if (r.gc > 0) {
     gcHow.push(`<b>${L("Columna", "Column")}:</b> ${t.COL[r.gcCol]}`);
@@ -322,7 +329,6 @@ function renderAdvisor(loading) {
     if (r.isPFAS) lcHow.push(`<b>PFAS:</b> ${L("usa columna retardadora y evita piezas de PTFE para no medir el fondo del equipo", "use a delay column and avoid PTFE parts so you don't measure the instrument background")}`);
   }
   const counter = d.counter.length ? `<div class="note">${L(`Se analiza el fragmento principal; se han ignorado: ${d.counter.join(", ")}.`, `The main fragment is analysed; ignored: ${d.counter.join(", ")}.`)}</div>` : "";
-
   box.innerHTML = `
     <div class="adv-best"><span class="k">${L("Recomendación", "Recommendation")}</span><span class="v">${esc(t.BEST[r.best][0])}</span><span class="s">${esc(t.BEST[r.best][1])}</span></div>
     <div class="stats adv-desc">
@@ -335,19 +341,20 @@ function renderAdvisor(loading) {
     <div class="grid-2 adv-cols">
       <div class="adv-col"><h3>GC ${lv("gc", r.gc)}</h3><ul>${li(r.gcWhy.map((k) => esc(t.W[k])))}</ul>${gcHow.length ? `<ul class="how">${li(gcHow)}</ul>` : ""}</div>
       <div class="adv-col"><h3>LC ${lv("lc", r.lc)}</h3><ul>${li(r.lcWhy.map((k) => esc(t.W[k])))}</ul>${lcHow.length ? `<ul class="how">${li(lcHow)}</ul>` : ""}
-        <button type="button" class="btn ghost" id="advToLc">${L("Añadir al simulador de HPLC →", "Add to the HPLC simulator →")}</button></div>
+        <button type="button" class="btn ghost adv-to-lc">${L("Añadir al simulador de HPLC →", "Add to the HPLC simulator →")}</button></div>
     </div>
     <p class="hint small">${L("Reglas generales a partir de la estructura (log P y TPSA calculados con OpenChemLib). No tienen en cuenta la matriz ni los límites que necesites: tómalo como punto de partida.", "General rules based on the structure (log P and TPSA computed with OpenChemLib). They do not consider your matrix or required limits: treat this as a starting point.")}</p>`;
-  $("advToLc").addEventListener("click", () => {
-    const name = (DRAW.name && DRAW.name.state === "ok" && DRAW.name.title) || d.formula;
-    const line = `${name.replace(/;/g, ",")}; ${d.logP.toFixed(2)}; ${d.mw.toFixed(0)}`;
-    const ta = $("lcCmp");
-    ta.value = ta.value.replace(/\s+$/, "") + "\n" + line;
-    store.set("lcCmp", ta.value);
-    CH.mode = "lc"; store.set("chMode", "lc");
-    location.hash = "#cromatografia";
-    renderChroma();
-  });
+  box.querySelector(".adv-to-lc").addEventListener("click", () => addToLcSim(getName(), d.logP, d.mw));
+}
+
+function addToLcSim(name, logP, mw) {
+  const line = `${String(name).replace(/;/g, ",")}; ${logP.toFixed(2)}; ${mw.toFixed(0)}`;
+  const ta = $("lcCmp");
+  ta.value = ta.value.replace(/\s+$/, "") + "\n" + line;
+  store.set("lcCmp", ta.value);
+  CH.mode = "lc"; store.set("chMode", "lc");
+  location.hash = "#cromatografia";
+  renderChroma();
 }
 
 // Engancharse a la lectura de la estructura del editor
