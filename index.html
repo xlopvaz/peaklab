@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PeakLab · herramientas de química analítica</title>
-<meta name="description" content="Calibrado, validación, aductos, patrones isotópicos e iones de fondo para GC-MS y LC-MS. Todo se calcula en tu navegador.">
+<meta name="description" content="Calibrado, validación, aductos, patrones isotópicos, editor de moléculas e iones de fondo para GC-MS y LC-MS. Todo se calcula en tu navegador.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e6b63'/%3E%3Cpath d='M4 25 C11 25 12 6 16 6 S21 25 28 25' fill='none' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,18 +14,22 @@
 <body>
 
 <header class="topbar">
-  <a class="brand" href="#inicio" aria-label="PeakLab, inicio">
+  <a class="brand" href="#inicio" aria-label="PeakLab">
     <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7"/><path d="M4 25 C11 25 12 6 16 6 S21 25 28 25"/></svg>
     <span>Peak<b>Lab</b></span>
   </a>
-  <nav class="tabs" aria-label="Herramientas">
-    <a href="#calibrado" data-tab="calibrado">Calibrado</a>
-    <a href="#masas" data-tab="masas">Masas</a>
-    <a href="#fondo" data-tab="fondo">Iones de fondo</a>
+  <nav class="tabs" data-i18n-aria="nav.aria" aria-label="Herramientas">
+    <a href="#calibrado" data-tab="calibrado" data-i18n="nav.cal">Calibrado</a>
+    <a href="#masas" data-tab="masas" data-i18n="nav.mass">Masas</a>
+    <a href="#dibujar" data-tab="dibujar" data-i18n="nav.draw">Dibujar</a>
+    <a href="#fondo" data-tab="fondo" data-i18n="nav.bg">Iones de fondo</a>
   </nav>
-  <button id="themeBtn" class="icon-btn" type="button" aria-label="Cambiar tema" title="Cambiar tema">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
-  </button>
+  <div class="top-actions">
+    <button id="langBtn" class="icon-btn lang" type="button" title="English / Español">EN</button>
+    <button id="themeBtn" class="icon-btn" type="button" data-i18n-aria="theme" aria-label="Cambiar tema">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+    </button>
+  </div>
 </header>
 
 <main>
@@ -37,34 +41,39 @@
       <path id="heroPath" d=""/>
     </svg>
     <p class="eyebrow">GC · LC · MS/MS</p>
-    <h1>Las cuentas del laboratorio, <span>sin hojas de Excel</span>.</h1>
-    <p class="lead">Recta de calibrado, LOD y LOQ, efecto matriz, recuperaciones, relación de iones, aductos, patrones isotópicos y un buscador de contaminantes típicos de GC-MS y LC-MS. Todo se calcula en tu navegador: no se envía ningún dato.</p>
+    <h1 data-i18n="home.h1">Las cuentas del laboratorio, <span>sin hojas de Excel</span>.</h1>
+    <p class="lead" data-i18n="home.lead">Recta de calibrado, LOD y LOQ, efecto matriz, recuperaciones, relación de iones, aductos, espectros isotópicos simulados, un editor de moléculas y un buscador de contaminantes típicos de GC-MS y LC-MS. Todo se calcula en tu navegador.</p>
   </div>
 
-  <div class="cards">
+  <div class="cards four">
     <a class="card tool-card" href="#calibrado">
       <span class="tool-ico">y = bx + a</span>
-      <h2>Calibrado y validación</h2>
-      <p>Pega concentraciones y áreas desde Excel. Regresión con o sin ponderación, residuales, LOD/LOQ, concentración de tus muestras con su intervalo de confianza, efecto matriz, recuperación y relación de iones según SANTE.</p>
+      <h2 data-i18n="home.c1t">Calibrado y validación</h2>
+      <p data-i18n="home.c1p">Pega concentraciones y áreas desde Excel. Regresión con o sin ponderación, residuales, LOD/LOQ, concentración de tus muestras con su intervalo de confianza, efecto matriz, recuperación y relación de iones.</p>
     </a>
     <a class="card tool-card" href="#masas">
       <span class="tool-ico">m/z</span>
-      <h2>Masas exactas</h2>
-      <p>Escribe una fórmula y obtén la masa monoisotópica, todos los aductos de ESI positivo y negativo, el patrón isotópico (Cl, Br, S…) y el error en ppm de tu medida.</p>
+      <h2 data-i18n="home.c2t">Masas y espectros</h2>
+      <p data-i18n="home.c2p">Masa monoisotópica, aductos de ESI y EI, error en ppm y el espectro isotópico simulado a la resolución de tu equipo, de un cuadrupolo a un Orbitrap.</p>
+    </a>
+    <a class="card tool-card" href="#dibujar">
+      <span class="tool-ico">⌬</span>
+      <h2 data-i18n="home.c3t">Dibujar moléculas</h2>
+      <p data-i18n="home.c3p">Editor de estructuras al estilo ChemDraw. Dibuja o busca en PubChem por nombre, CAS o SMILES, y pasa la fórmula a la calculadora de masas con un clic.</p>
     </a>
     <a class="card tool-card" href="#fondo">
       <span class="tool-ico">?</span>
-      <h2>Iones de fondo</h2>
-      <p>¿Un pico que aparece en todos los blancos? Busca su m/z entre ftalatos, siloxanos, sangrado de columna, aditivos de plásticos y otros contaminantes habituales.</p>
+      <h2 data-i18n="home.c4t">Iones de fondo</h2>
+      <p data-i18n="home.c4p">¿Un pico que aparece en todos los blancos? Busca su m/z entre ftalatos, siloxanos, sangrado de columna, aditivos de plásticos y otros contaminantes habituales.</p>
     </a>
   </div>
 
   <div class="soon">
-    <h3>Próximamente</h3>
-    <ul>
+    <h3 data-i18n="home.soon">Próximamente</h3>
+    <ul data-i18n="home.soonList">
       <li><b>Traductor de métodos</b> HPLC → UHPLC y calculadora de flujos de GC</li>
       <li><b>Simulador de cromatogramas</b>: gradientes, rampas y resolución</li>
-      <li><b>¿GC o LC?</b> a partir de una estructura (SMILES)</li>
+      <li><b>¿GC o LC?</b> a partir de la estructura dibujada</li>
       <li><b>Métricas verdes</b>: AGREEprep y BAGI</li>
     </ul>
   </div>
@@ -73,14 +82,14 @@
 <!-- ===================== CALIBRADO ===================== -->
 <section id="calibrado" class="view" hidden>
   <div class="view-head">
-    <h1>Calibrado y validación</h1>
-    <p>Una línea por patrón: concentración y respuesta (área, o cociente analito/patrón interno). Puedes pegar dos columnas directamente desde Excel; acepta coma decimal.</p>
+    <h1 data-i18n="cal.h1">Calibrado y validación</h1>
+    <p data-i18n="cal.intro">Una línea por patrón: concentración y respuesta (área, o cociente analito/patrón interno). Puedes pegar dos columnas directamente desde Excel; acepta coma o punto decimal.</p>
   </div>
 
   <div class="grid-2">
     <div class="card">
       <div class="field-row">
-        <label class="field grow">Unidad de los patrones
+        <label class="field grow"><span data-i18n="cal.unit">Unidad de los patrones</span>
           <select id="calUnit">
             <option value="1e-9">ng/L</option>
             <option value="1e-6" selected>ng/mL (= µg/L)</option>
@@ -88,20 +97,20 @@
             <option value="1">mg/mL (= g/L)</option>
           </select>
         </label>
-        <label class="field grow">Ponderación
+        <label class="field grow"><span data-i18n="cal.weight">Ponderación</span>
           <select id="calWeight">
-            <option value="none">Sin ponderar</option>
+            <option value="none" data-i18n="cal.w0">Sin ponderar</option>
             <option value="x">1/x</option>
             <option value="x2">1/x²</option>
           </select>
         </label>
       </div>
-      <label class="field">Patrones <span class="hint">concentración · respuesta</span>
+      <label class="field"><span><span data-i18n="cal.stds">Patrones</span> <span class="hint" data-i18n="cal.stdsHint">concentración · respuesta</span></span>
         <textarea id="calData" rows="9" spellcheck="false"></textarea>
       </label>
       <div class="btn-row">
-        <button type="button" class="btn ghost" id="calExample">Cargar ejemplo</button>
-        <button type="button" class="btn ghost" id="calClear">Vaciar</button>
+        <button type="button" class="btn ghost" id="calExample" data-i18n="cal.example">Cargar ejemplo</button>
+        <button type="button" class="btn ghost" id="calClear" data-i18n="cal.clear">Vaciar</button>
       </div>
     </div>
 
@@ -113,94 +122,94 @@
 
   <div class="grid-2">
     <figure class="card chart-card">
-      <figcaption>Recta de calibrado</figcaption>
+      <figcaption data-i18n="cal.chart1">Recta de calibrado</figcaption>
       <div id="calChart" class="chart"></div>
     </figure>
     <figure class="card chart-card">
-      <figcaption>Error relativo de cada patrón (concentración recalculada)</figcaption>
+      <figcaption data-i18n="cal.chart2">Error relativo de cada patrón (concentración recalculada)</figcaption>
       <div id="resChart" class="chart"></div>
     </figure>
   </div>
 
   <div class="card">
-    <h2 class="card-title">Muestras</h2>
-    <p class="muted">Una muestra por línea: nombre (opcional) y respuesta. Si preconcentraste o diluiste, indica los volúmenes para obtener la concentración en la muestra original.</p>
+    <h2 class="card-title" data-i18n="smp.h">Muestras</h2>
+    <p class="muted" data-i18n="smp.intro">Una muestra por línea: nombre (opcional) y respuesta. Si preconcentraste o diluiste, indica los volúmenes para obtener la concentración en la muestra original.</p>
     <div class="grid-2 tight">
-      <label class="field">Muestras <span class="hint">nombre · respuesta</span>
+      <label class="field"><span><span data-i18n="smp.label">Muestras</span> <span class="hint" data-i18n="smp.hint">nombre · respuesta</span></span>
         <textarea id="smpData" rows="5" spellcheck="false"></textarea>
       </label>
       <div>
         <div class="field-row">
-          <label class="field grow">Volumen (o masa) de muestra
+          <label class="field grow"><span data-i18n="smp.vs">Volumen (o masa) de muestra</span>
             <input id="smpVs" type="text" inputmode="decimal" value="500">
           </label>
-          <label class="field grow">Volumen final del extracto
+          <label class="field grow"><span data-i18n="smp.vf">Volumen final del extracto</span>
             <input id="smpVf" type="text" inputmode="decimal" value="1">
           </label>
         </div>
         <div class="field-row">
-          <label class="field grow">Dilución adicional del extracto
+          <label class="field grow"><span data-i18n="smp.dil">Dilución adicional del extracto</span>
             <input id="smpDil" type="text" inputmode="decimal" value="1">
           </label>
-          <label class="field grow">Réplicas por muestra (para el IC)
+          <label class="field grow"><span data-i18n="smp.rep">Réplicas por muestra (para el IC)</span>
             <input id="smpRep" type="text" inputmode="numeric" value="1">
           </label>
         </div>
-        <p class="hint small">Factor aplicado = (V<sub>extracto</sub> / V<sub>muestra</sub>) × dilución, en las mismas unidades de volumen.</p>
+        <p class="hint small" data-i18n="smp.factor">Factor aplicado = (V<sub>extracto</sub> / V<sub>muestra</sub>) × dilución, en las mismas unidades de volumen.</p>
       </div>
     </div>
     <div class="table-wrap"><table id="smpTable" class="data"></table></div>
   </div>
 
-  <h2 class="section-title">Parámetros de validación</h2>
+  <h2 class="section-title" data-i18n="val.h">Parámetros de validación</h2>
   <div class="grid-3">
     <div class="card">
-      <h3 class="card-title">Efecto matriz</h3>
-      <p class="muted small">Compara la pendiente de la recta en matriz con la del disolvente.</p>
-      <label class="field">Pendiente en disolvente <span class="hint">se rellena con tu recta</span>
+      <h3 class="card-title" data-i18n="me.h">Efecto matriz</h3>
+      <p class="muted small" data-i18n="me.p">Compara la pendiente de la recta en matriz con la del disolvente.</p>
+      <label class="field"><span><span data-i18n="me.solv">Pendiente en disolvente</span> <span class="hint" data-i18n="me.solvHint">se rellena con tu recta</span></span>
         <input id="meSolv" type="text" inputmode="decimal">
       </label>
-      <label class="field">Pendiente en matriz
-        <input id="meMat" type="text" inputmode="decimal" placeholder="p. ej. 0,041">
+      <label class="field"><span data-i18n="me.mat">Pendiente en matriz</span>
+        <input id="meMat" type="text" inputmode="decimal" placeholder="0.041">
       </label>
       <div id="meOut" class="result"></div>
     </div>
 
     <div class="card">
-      <h3 class="card-title">Recuperación</h3>
-      <p class="muted small">Muestra fortificada frente a la cantidad añadida. Varias réplicas separadas por espacios o líneas.</p>
-      <label class="field">Concentración añadida
-        <input id="recAdd" type="text" inputmode="decimal" placeholder="p. ej. 50">
+      <h3 class="card-title" data-i18n="rec.h">Recuperación</h3>
+      <p class="muted small" data-i18n="rec.p">Muestra fortificada frente a la cantidad añadida. Varias réplicas separadas por espacios o líneas.</p>
+      <label class="field"><span data-i18n="rec.add">Concentración añadida</span>
+        <input id="recAdd" type="text" inputmode="decimal" placeholder="50">
       </label>
-      <label class="field">Medido en la muestra sin fortificar
+      <label class="field"><span data-i18n="rec.blank">Medido en la muestra sin fortificar</span>
         <input id="recBlank" type="text" inputmode="decimal" value="0">
       </label>
-      <label class="field">Medido en las fortificadas <span class="hint">réplicas</span>
-        <textarea id="recRep" rows="2" spellcheck="false" placeholder="46,1  48,9  44,7"></textarea>
+      <label class="field"><span><span data-i18n="rec.reps">Medido en las fortificadas</span> <span class="hint" data-i18n="rec.repsHint">réplicas</span></span>
+        <textarea id="recRep" rows="2" spellcheck="false" placeholder="46.1  48.9  44.7"></textarea>
       </label>
       <div id="recOut" class="result"></div>
     </div>
 
     <div class="card">
-      <h3 class="card-title">Relación de iones (MRM)</h3>
-      <p class="muted small">Área de la transición de confirmación dividida entre la de cuantificación.</p>
+      <h3 class="card-title" data-i18n="ir.h">Relación de iones (MRM)</h3>
+      <p class="muted small" data-i18n="ir.p">Área de la transición de confirmación dividida entre la de cuantificación.</p>
       <div class="field-row">
-        <label class="field grow">Patrón: cuant.
+        <label class="field grow"><span data-i18n="ir.sq">Patrón: cuant.</span>
           <input id="irStdQ" type="text" inputmode="decimal" placeholder="12500">
         </label>
-        <label class="field grow">Patrón: conf.
+        <label class="field grow"><span data-i18n="ir.sc">Patrón: conf.</span>
           <input id="irStdC" type="text" inputmode="decimal" placeholder="5400">
         </label>
       </div>
       <div class="field-row">
-        <label class="field grow">Muestra: cuant.
+        <label class="field grow"><span data-i18n="ir.mq">Muestra: cuant.</span>
           <input id="irSmpQ" type="text" inputmode="decimal" placeholder="3100">
         </label>
-        <label class="field grow">Muestra: conf.
+        <label class="field grow"><span data-i18n="ir.mc">Muestra: conf.</span>
           <input id="irSmpC" type="text" inputmode="decimal" placeholder="1180">
         </label>
       </div>
-      <label class="field">Tolerancia relativa
+      <label class="field"><span data-i18n="ir.tol">Tolerancia relativa</span>
         <select id="irTol">
           <option value="30" selected>±30 % (SANTE/11312/2021)</option>
           <option value="20">±20 %</option>
@@ -215,12 +224,12 @@
 <!-- ===================== MASAS ===================== -->
 <section id="masas" class="view" hidden>
   <div class="view-head">
-    <h1>Masas exactas</h1>
-    <p>Fórmula molecular de la especie neutra, con paréntesis si quieres: <code>C15H12N2O</code>, <code>C24H38O4</code>, <code>Ca(OH)2</code>. Usa <code>D</code> para deuterio en patrones internos marcados (<code>C15H2D10N2O</code>).</p>
+    <h1 data-i18n="ms.h1">Masas y espectros</h1>
+    <p data-i18n="ms.intro">Fórmula molecular de la especie neutra, con paréntesis si quieres: <code>C15H12N2O</code>, <code>C24H38O4</code>, <code>Ca(OH)2</code>. Usa <code>D</code> para deuterio en patrones internos marcados (<code>C15H2D10N2O</code>). También puedes dibujar la molécula en la pestaña <a href="#dibujar">Dibujar</a>.</p>
   </div>
 
   <div class="card formula-card">
-    <label class="field">Fórmula
+    <label class="field"><span data-i18n="ms.formula">Fórmula</span>
       <input id="fmInput" type="text" spellcheck="false" autocomplete="off" value="C15H12N2O">
     </label>
     <div class="chips" id="fmChips"></div>
@@ -229,17 +238,31 @@
 
   <div class="grid-2">
     <div class="card">
-      <h2 class="card-title">Aductos</h2>
+      <h2 class="card-title" data-i18n="ms.adducts">Aductos</h2>
       <div class="table-wrap"><table id="adTable" class="data selectable"></table></div>
-      <p class="hint small">Haz clic en un aducto para ver su patrón isotópico y calcular el error en ppm.</p>
+      <p class="hint small" data-i18n="ms.adHint">Haz clic en un aducto para ver su espectro y calcular el error en ppm.</p>
     </div>
     <div class="card">
-      <h2 class="card-title">Patrón isotópico <span id="isoLabel" class="tag"></span></h2>
+      <h2 class="card-title"><span data-i18n="ms.spec">Espectro simulado</span> <span id="isoLabel" class="tag"></span></h2>
+      <div class="field-row wrap spec-ctl">
+        <label class="field grow"><span data-i18n="ms.res">Resolución del equipo</span>
+          <select id="msRes">
+            <option value="0" data-i18n="ms.r0">Barras (sin perfil)</option>
+            <option value="q" data-i18n="ms.r1">≈ 0,7 Da FWHM · cuadrupolo / QqQ</option>
+            <option value="20000" data-i18n="ms.r2">R = 20 000 · Q-TOF</option>
+            <option value="70000" data-i18n="ms.r3">R = 70 000 · Orbitrap</option>
+            <option value="240000" data-i18n="ms.r4">R = 240 000 · Orbitrap alta resolución</option>
+            <option value="1000000" data-i18n="ms.r5">R = 1 000 000 · FT-ICR</option>
+          </select>
+        </label>
+      </div>
+      <div class="seg" id="msZoom"></div>
       <div id="isoChart" class="chart"></div>
+      <p id="specNote" class="hint small"></p>
       <div class="table-wrap"><table id="isoTable" class="data compact"></table></div>
       <div class="ppm-box">
-        <label class="field">m/z medida
-          <input id="ppmMeas" type="text" inputmode="decimal" placeholder="p. ej. 237.1023">
+        <label class="field"><span data-i18n="ms.meas">m/z medida</span>
+          <input id="ppmMeas" type="text" inputmode="decimal" placeholder="237.1023">
         </label>
         <div id="ppmOut" class="result"></div>
       </div>
@@ -247,29 +270,64 @@
   </div>
 </section>
 
+<!-- ===================== DIBUJAR ===================== -->
+<section id="dibujar" class="view" hidden>
+  <div class="view-head">
+    <h1 data-i18n="dr.h1">Dibujar moléculas</h1>
+    <p data-i18n="dr.intro">Dibuja con las herramientas de la izquierda (enlaces, átomos, anillos, cargas) o carga una estructura desde PubChem. La fórmula y la masa se calculan mientras dibujas.</p>
+  </div>
+
+  <div class="card">
+    <form id="pcForm" class="field-row wrap pc-row">
+      <label class="field grow"><span><span data-i18n="dr.search">Buscar en PubChem</span> <span class="hint" data-i18n="dr.searchHint">nombre en inglés, nº CAS o SMILES</span></span>
+        <input id="pcQuery" type="text" spellcheck="false" autocomplete="off" placeholder="carbamazepine, 298-46-4, CN1C=NC2=C1C(=O)N(C(=O)N2C)C">
+      </label>
+      <button type="submit" class="btn" id="pcBtn" data-i18n="dr.load">Cargar</button>
+    </form>
+    <p id="pcMsg" class="hint small"></p>
+  </div>
+
+  <div class="draw-layout">
+    <div class="card editor-card">
+      <div id="composer" class="composer"><p class="composer-loading" data-i18n="dr.loading">Cargando el editor…</p></div>
+    </div>
+    <div class="card draw-side">
+      <h2 class="card-title" data-i18n="dr.struct">Estructura</h2>
+      <div id="drOut" class="stats single"></div>
+      <div class="btn-col">
+        <button type="button" class="btn" id="drToMass" data-i18n="dr.toMass">Ver aductos y espectro →</button>
+        <button type="button" class="btn ghost" id="drCopySmi" data-i18n="dr.copySmi">Copiar SMILES</button>
+        <button type="button" class="btn ghost" id="drPng" data-i18n="dr.png">Descargar imagen (PNG)</button>
+        <button type="button" class="btn ghost" id="drClear" data-i18n="dr.clear">Borrar todo</button>
+      </div>
+      <p class="hint small" data-i18n="dr.tip">Truco: con la herramienta de enlace, haz clic en el lienzo para empezar y otra vez sobre un átomo para alargar la cadena. Con la herramienta «C» cambias el elemento de un átomo.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== FONDO ===================== -->
 <section id="fondo" class="view" hidden>
   <div class="view-head">
-    <h1>Iones de fondo y contaminantes</h1>
-    <p>Escribe la m/z de un pico sospechoso. Las masas se calculan a partir de la fórmula de cada ion, así que puedes buscar con precisión de alta resolución o nominal.</p>
+    <h1 data-i18n="bg.h1">Iones de fondo y contaminantes</h1>
+    <p data-i18n="bg.intro">Escribe la m/z de un pico sospechoso. Las masas se calculan a partir de la fórmula de cada ion, así que puedes buscar con precisión de alta resolución o nominal.</p>
   </div>
 
   <div class="card">
     <div class="field-row wrap">
-      <label class="field grow">m/z o texto
-        <input id="bgQuery" type="text" spellcheck="false" autocomplete="off" placeholder="445.12, ftalato, siloxano…">
+      <label class="field grow"><span data-i18n="bg.q">m/z o texto</span>
+        <input id="bgQuery" type="text" spellcheck="false" autocomplete="off" data-i18n-ph="bg.ph" placeholder="445.12, ftalato, siloxano…">
       </label>
-      <label class="field">Tolerancia
+      <label class="field"><span data-i18n="bg.tol">Tolerancia</span>
         <select id="bgTol">
           <option value="ppm5">5 ppm</option>
           <option value="ppm10">10 ppm</option>
-          <option value="da0.01">0,01 Da</option>
-          <option value="da0.5" selected>0,5 Da (nominal)</option>
+          <option value="da0.01">0.01 Da</option>
+          <option value="da0.5" selected data-i18n="bg.nominal">0,5 Da (nominal)</option>
         </select>
       </label>
-      <label class="field">Técnica
+      <label class="field"><span data-i18n="bg.tech">Técnica</span>
         <select id="bgMode">
-          <option value="all">Todas</option>
+          <option value="all" data-i18n="bg.all">Todas</option>
           <option value="esi+">LC-ESI(+)</option>
           <option value="esi-">LC-ESI(−)</option>
           <option value="ei">GC-EI</option>
@@ -284,8 +342,8 @@
 </main>
 
 <footer class="foot">
-  <p>PeakLab calcula todo en tu navegador; no se guarda ni se envía nada fuera de tu ordenador. Los valores son de apoyo: comprueba siempre los criterios de la guía que aplique a tu método.</p>
-  <p>Hecho por Xoel López Vázquez · <a href="https://github.com/xlopvaz/peaklab">código en GitHub</a></p>
+  <p data-i18n="foot.1">PeakLab calcula todo en tu navegador; no se guarda ni se envía nada fuera de tu ordenador (salvo las búsquedas en PubChem que tú lances). Los valores son de apoyo: comprueba siempre los criterios de la guía que aplique a tu método.</p>
+  <p><span data-i18n="foot.2">Hecho por Xoel López Vázquez</span> · <a href="https://github.com/xlopvaz/peaklab" data-i18n="foot.3">código en GitHub</a> · <span data-i18n="foot.4">Editor de moléculas: <a href="https://partridgejiang.github.io/Kekule.js/">Kekule.js</a> (MIT)</span></p>
 </footer>
 
 <script src="script.js"></script>
