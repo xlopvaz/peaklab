@@ -1,5 +1,5 @@
-/* PeakLab · Referencia: derivatización, columnas, disolventes y tampones, normativa.
-   Los datos de normativa y equivalencias se han contrastado con las fuentes enlazadas en cada tarjeta. */
+/* PeakLab · Referencia: derivatización, columnas, disolventes y tampones.
+   Las equivalencias se han contrastado con tablas de los fabricantes y el listado USP. */
 "use strict";
 
 Object.assign(EN, {
@@ -21,8 +21,6 @@ Object.assign(EN, {
   "co.intro": "Equivalent GC phases across manufacturers with their USP code, and USP L codes for LC with example columns and when to use them.",
   "sv.h1": "Solvents and buffers",
   "sv.intro": "Solvent properties for LC and GC, the vapour volume of your injection compared with the liner, LC mobile-phase additives and a buffer calculator.",
-  "nr.h1": "Guidelines",
-  "nr.intro": "Key numerical criteria of the most used chromatography guidelines, with a link to the official text. Always check the version in force before applying them.",
 });
 
 /* =========================================================
@@ -328,86 +326,6 @@ function calcBuffer() {
 }
 
 /* =========================================================
-   NORMATIVA
-   ========================================================= */
-function guidelineCards() {
-  const T = (es, en) => L(es, en);
-  const tbl = (rows) => `<table class="data compact"><tbody>${rows.map(([a, b]) => `<tr><th>${a}</th><td>${b}</td></tr>`).join("")}</tbody></table>`;
-  return [
-    { t: "SANTE/11312/2021 v2026", s: T("Residuos de plaguicidas en alimentos y piensos (control de calidad y validación). Sustituye a la v2 desde el 1 de enero de 2026.", "Pesticide residues in food and feed (quality control and validation). Replaces v2 from 1 January 2026."),
-      url: "https://food.ec.europa.eu/system/files/2023-11/pesticides_mrl_guidelines_wrkdoc_2021-11312.pdf",
-      b: tbl([
-        [T("Recuperación media", "Mean recovery"), "70–120 %"],
-        [T("Precisión", "Precision"), T("RSD<sub>r</sub> y RSD<sub>wR</sub> ≤ 20 %", "RSD<sub>r</sub> and RSD<sub>wR</sub> ≤ 20 %")],
-        [T("Validación inicial", "Initial validation"), T("≥ 5 réplicas en el LOQ y en al menos otro nivel", "≥ 5 replicates at the LOQ and at least one other level")],
-        ["LOQ", T("Nivel más bajo validado que cumple los criterios", "Lowest validated level meeting the criteria")],
-        [T("Calibrado", "Calibration"), T("Desviación de los patrones recalculados ≤ ±20 %", "Back-calculated deviation ≤ ±20 %")],
-        [T("Tiempo de retención", "Retention time"), T("± 0,1 min", "± 0.1 min")],
-        ["MS/MS", T("≥ 2 iones producto; relación de iones ±30 % (relativo)", "≥ 2 product ions; ion ratio ±30 % (relative)")],
-        [T("MS de baja resolución (barrido)", "Low-resolution full-scan MS"), T("≥ 3 iones, S/N ≥ 3, relación ±30 %", "≥ 3 ions, S/N ≥ 3, ratio ±30 %")],
-        ["HRMS", T("≥ 2 iones con error ≤ 5 ppm (< 1 mDa si m/z < 200)", "≥ 2 ions with error ≤ 5 ppm (< 1 mDa if m/z < 200)")],
-        [T("Efecto matriz", "Matrix effect"), T("Si supera el 20 %, hay que compensarlo en el calibrado", "Above 20 %, it must be compensated in calibration")],
-        [T("Blanco de reactivos", "Reagent blank"), T("≤ 30 % del nivel de notificación", "≤ 30 % of the reporting level")],
-      ]) },
-    { t: T("Reglamento (UE) 2021/808", "Regulation (EU) 2021/808"), s: T("Residuos de sustancias farmacológicamente activas en animales productores de alimentos (sustituye a la Decisión 2002/657/CE).", "Residues of pharmacologically active substances in food-producing animals (replaces Decision 2002/657/EC)."),
-      url: "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A02021R0808-20240820",
-      b: tbl([
-        [T("Tiempo de retención", "Retention time"), T("± 0,1 min (si t<sub>R</sub> < 2 min, desviación < 5 %)", "± 0.1 min (if t<sub>R</sub> < 2 min, deviation < 5 %)")],
-        [T("Tiempo de retención relativo", "Relative retention time"), T("± 0,5 % en GC; ± 1 % en LC", "± 0.5 % in GC; ± 1 % in LC")],
-        [T("Puntos de identificación", "Identification points"), T("≥ 4 (sustancias autorizadas) · ≥ 5 (prohibidas o no autorizadas)", "≥ 4 (authorised substances) · ≥ 5 (prohibited or unauthorised)")],
-        [T("Puntos por técnica", "Points per technique"), T("Separación 1 · ion LR-MS 1 · ion producto LR-MSⁿ 1,5 · ion HRMS 1,5 · ion producto HR-MSⁿ 2,5", "Separation 1 · LR-MS ion 1 · LR-MSⁿ product ion 1.5 · HRMS ion 1.5 · HR-MSⁿ product ion 2.5")],
-        [T("Ejemplo", "Example"), T("LC-MS/MS con 1 precursor y 2 transiciones = 5 puntos", "LC-MS/MS with 1 precursor and 2 transitions = 5 points")],
-        [T("Relación de iones", "Ion ratio"), T("± 40 % (relativo)", "± 40 % (relative)")],
-        ["HRMS", T("Error < 5 ppm (< 1 mDa si m/z < 200); resolución > 20 000 FWHM", "Error < 5 ppm (< 1 mDa if m/z < 200); resolution > 20,000 FWHM")],
-        ["S/N", "≥ 3"],
-        [T("Veracidad", "Trueness"), T("≤ 1 µg/kg: −50 a +20 % · 1–10 µg/kg: −30 a +20 % · ≥ 10 µg/kg: −20 a +20 %", "≤ 1 µg/kg: −50 to +20 % · 1–10 µg/kg: −30 to +20 % · ≥ 10 µg/kg: −20 to +20 %")],
-        [T("Reproducibilidad (CV)", "Reproducibility (CV)"), T("< 10 µg/kg: 30 % · 10–120: 25 % · 120–1000: 22 % · > 1000: 16 %", "< 10 µg/kg: 30 % · 10–120: 25 % · 120–1000: 22 % · > 1000: 16 %")],
-      ]),
-      foot: T("Versión consolidada de agosto de 2024: comprueba si hay modificaciones posteriores.", "Consolidated version of August 2024: check for later amendments.") },
-    { t: "ICH Q2(R2)", s: T("Validación de procedimientos analíticos (sector farmacéutico). En vigor desde el 14 de junio de 2024.", "Validation of analytical procedures (pharmaceutical). In force since 14 June 2024."),
-      url: "https://www.ema.europa.eu/en/documents/scientific-guideline/ich-q2r2-guideline-validation-analytical-procedures-step-5-revision-1_en.pdf",
-      b: tbl([
-        [T("Características", "Characteristics"), T("Especificidad/selectividad, intervalo (respuesta y linealidad), exactitud, precisión (repetibilidad, precisión intermedia, reproducibilidad), LD/LC", "Specificity/selectivity, range (response and linearity), accuracy, precision (repeatability, intermediate precision, reproducibility), DL/QL")],
-        [T("Linealidad", "Linearity"), T("Al menos 5 concentraciones repartidas por el intervalo", "At least 5 concentrations across the range")],
-        [T("Exactitud", "Accuracy"), T("p. ej. 3 concentraciones × 3 réplicas en el intervalo", "e.g. 3 concentrations × 3 replicates across the range")],
-        [T("Repetibilidad", "Repeatability"), T("9 determinaciones (3 × 3) o 6 al 100 % de la concentración de ensayo", "9 determinations (3 × 3) or 6 at 100 % of test concentration")],
-        [T("Límite de detección", "Detection limit"), T("S/N 3:1, o LD = 3,3·σ/S", "S/N 3:1, or DL = 3.3·σ/S")],
-        [T("Límite de cuantificación", "Quantitation limit"), T("S/N ≥ 10:1, o LC = 10·σ/S", "S/N ≥ 10:1, or QL = 10·σ/S")],
-        [T("Intervalo: valoración", "Range: assay"), T("80–120 % del contenido declarado", "80–120 % of declared content")],
-        [T("Intervalo: uniformidad", "Range: content uniformity"), "70–130 %"],
-        [T("Intervalo: impurezas", "Range: impurities"), T("Del umbral de notificación al 120 % de la especificación", "Reporting threshold to 120 % of the specification")],
-      ]) },
-    { t: T("USP <621> (armonizado)", "USP <621> (harmonized)"), s: T("Cambios permitidos en métodos de LC sin revalidar, siempre que se cumpla la idoneidad del sistema.", "Allowed changes to LC methods without revalidation, provided system suitability is met."),
-      url: "https://community.agilent.com/technical/consumables/w/wiki/21654/allowed-changes-in-usp-methods",
-      b: tbl([
-        [T("Tipo de fase", "Phase type"), T("Debe mantenerse la clase USP (p. ej. L1)", "The USP class must be kept (e.g. L1)")],
-        ["L/d<sub>p</sub>", T("−25 % a +50 % (o N equivalente con partícula superficialmente porosa)", "−25 % to +50 % (or equivalent N with superficially porous particles)")],
-        [T("Flujo", "Flow"), T("F₂ = F₁ × (d<sub>c2</sub>² · d<sub>p1</sub>) / (d<sub>c1</sub>² · d<sub>p2</sub>); isocrático: ±50 % adicional", "F₂ = F₁ × (d<sub>c2</sub>² · d<sub>p1</sub>) / (d<sub>c1</sub>² · d<sub>p2</sub>); isocratic: additional ±50 %")],
-        [T("Volumen de inyección", "Injection volume"), "V₂ = V₁ × (L₂ · d<sub>c2</sub>²) / (L₁ · d<sub>c1</sub>²)"],
-        [T("Tiempo de gradiente", "Gradient time"), "t<sub>G2</sub> = t<sub>G1</sub> × (F₁/F₂) × (L₂ · d<sub>c2</sub>²) / (L₁ · d<sub>c1</sub>²)"],
-        [T("Temperatura de columna", "Column temperature"), T("± 10 °C (isocrático) · ± 5 °C (gradiente)", "± 10 °C (isocratic) · ± 5 °C (gradient)")],
-        [T("pH de la fase acuosa", "Aqueous pH"), T("± 0,2", "± 0.2")],
-        [T("Concentración de tampón", "Buffer concentration"), "± 10 %"],
-        [T("Componente minoritario (isocrático)", "Minor component (isocratic)"), T("± 30 % relativo o ± 10 % absoluto, lo menor", "± 30 % relative or ± 10 % absolute, whichever is smaller")],
-        [T("Longitud de onda", "Wavelength"), T("Sin cambios", "No changes")],
-      ]),
-      foot: T("Resumen de un fabricante; comprueba el texto oficial vigente de la USP–NF. La Ph. Eur. 2.2.46 está armonizada.", "Manufacturer's summary; check the current official USP–NF text. Ph. Eur. 2.2.46 is harmonized.") },
-    { t: T("Directiva 2009/90/CE", "Directive 2009/90/EC"), s: T("Especificaciones técnicas del análisis químico para el seguimiento de las aguas (Directiva Marco del Agua).", "Technical specifications for chemical analysis in water monitoring (Water Framework Directive)."),
-      url: "https://eur-lex.europa.eu/eli/dir/2009/90/oj",
-      b: tbl([
-        [T("Incertidumbre", "Uncertainty"), T("≤ 50 % (k = 2) a la concentración de la norma de calidad ambiental (NCA)", "≤ 50 % (k = 2) at the environmental quality standard (EQS) level")],
-        [T("Límite de cuantificación", "Limit of quantification"), T("≤ 30 % de la NCA", "≤ 30 % of the EQS")],
-        [T("Si ningún método lo cumple", "If no method meets this"), T("Mejores técnicas disponibles sin costes excesivos", "Best available techniques not entailing excessive costs")],
-      ]) },
-  ];
-}
-function renderGuidelines() {
-  if (!$("normativa")) return;
-  $("nrCards").innerHTML = guidelineCards().map((g) => `<div class="card guide-card"><h2 class="card-title">${g.t}</h2><p class="muted small">${g.s}</p>${g.b}
-    ${g.foot ? `<p class="hint small">${g.foot}</p>` : ""}<p class="small"><a href="${g.url}" target="_blank" rel="noopener">${L("Texto oficial / fuente", "Official text / source")} ↗</a></p></div>`).join("");
-}
-
-/* =========================================================
    Inicio
    ========================================================= */
 function initReference() {
@@ -424,15 +342,14 @@ function initReference() {
     });
   }
   renderSolvents();
-  renderGuidelines();
 }
 
-["derivatizacion", "columnas", "disolventes", "normativa"].forEach((v) => VIEWS.push(v));
+["derivatizacion", "columnas", "disolventes"].forEach((v) => VIEWS.push(v));
 const _renderAll7 = renderAll;
 renderAll = function () {
   _renderAll7();
   if ($("dvReagent")) { const v = $("dvReagent").value; $("dvReagent").innerHTML = DERIV.map((x) => `<option value="${x.id}">${esc(dvName(x))} · ${x.type}</option>`).join(""); $("dvReagent").value = v; renderDeriv(); }
-  renderColumns(); renderSolvents(); renderGuidelines();
+  renderColumns(); renderSolvents();
 };
 initReference();
 applyStatic();

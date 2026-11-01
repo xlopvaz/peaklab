@@ -27,7 +27,6 @@ Free tools for GC and LC laboratories that run entirely in the browser. Availabl
 - **Derivatization:** silylation, methylation, acylation, PFBBr, MOX, NaBEt₄, FMOC-Cl, dansyl chloride and DNPH, with conditions, diagnostic ions and a derivative mass calculator.
 - **Columns:** equivalent GC phases across manufacturers with USP G codes; USP L codes for LC with example columns.
 - **Solvents and buffers:** solvent properties, GC inlet vapour volume versus liner volume, LC additives and a buffer calculator.
-- **Guidelines:** key criteria of SANTE/11312/2021 v2026, Regulation (EU) 2021/808, ICH Q2(R2), USP <621> and Directive 2009/90/EC, with links to the official texts.
 
 ## Files
 
@@ -40,7 +39,7 @@ Free tools for GC and LC laboratories that run entirely in the browser. Availabl
 - `green.js`: AGREEprep and BAGI
 - `compound.js`: compound data page (PubChem)
 - `troubleshoot.js`: troubleshooting guide
-- `reference.js`: derivatization, columns, solvents and buffers, guidelines
+- `reference.js`: derivatization, columns, solvents and buffers
 - `sequence.js`: injection sequence builder
 
 Made by Xoel López Vázquez.

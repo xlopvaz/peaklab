@@ -91,7 +91,6 @@ const EN = {
   "nav.deriv": "Derivatization", "nav.derivD": "Reagents, conditions and derivative mass",
   "nav.cols": "Columns", "nav.colsD": "GC equivalents and USP codes",
   "nav.solv": "Solvents and buffers", "nav.solvD": "Properties, buffers and vapour volume",
-  "nav.guide": "Guidelines", "nav.guideD": "SANTE, 2021/808, ICH Q2(R2), USP <621>",
   "home.c1t": "Calibration and validation",
   "home.c1p": "Paste concentrations and areas from Excel. Weighted or unweighted regression, residuals, LOD/LOQ, sample concentrations with confidence intervals, matrix effect, recovery and ion ratios.",
   "home.c2t": "Masses and spectra",

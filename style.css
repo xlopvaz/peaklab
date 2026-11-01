@@ -535,10 +535,6 @@ table.data td.cols { font-size: 13px; min-width: 260px; }
 .polbar { display: inline-flex; gap: 2px; }
 .polbar i { width: 7px; height: 12px; border-radius: 2px; background: var(--accent); display: inline-block; }
 .polbar i.off { background: var(--line); }
-.guide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 16px; }
-.guide-card table.data th { width: 38%; font-size: 13px; color: var(--ink-2); vertical-align: top; text-align: left; white-space: normal; font-weight: 600; border-bottom: 1px solid var(--line); padding: 6px 10px 6px 0; }
-.guide-card table.data td { font-size: 13.5px; }
-@media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
 
 /* ---------- Sequence ---------- */
 .stats.four-s { grid-template-columns: repeat(4, minmax(0, 1fr)); }
