@@ -1,0 +1,15 @@
+{
+  "name": "PeakLab · chromatography tools",
+  "short_name": "PeakLab",
+  "description": "Free tools for GC and LC laboratories: compound data, method development and transfer, sequences, calibration, troubleshooting and reference data.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f5f1",
+  "theme_color": "#0e6b63",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
